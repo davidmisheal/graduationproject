@@ -105,7 +105,7 @@ const tourSchema = new mongoose.Schema(
       default: false
     },
     role: { type: String, default: "tourguide" },
-    location:{type : String, required : false},
+    location:{type : String, required : true},
     approved: { type: Boolean, default: false },
     guides: [
       {
