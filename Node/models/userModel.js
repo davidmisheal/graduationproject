@@ -2,6 +2,9 @@ const crypto = require('crypto');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const Schema = mongoose.Schema;
+
+
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -41,6 +44,7 @@ const userSchema = new mongoose.Schema({
       message: 'Passwords are not the same!'
     }
   },
+  favorites: [{ type: Schema.Types.ObjectId, ref: 'Place' }],
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,

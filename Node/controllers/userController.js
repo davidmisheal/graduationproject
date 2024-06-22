@@ -4,6 +4,67 @@ const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 const multer = require('multer');
 const sharp = require('sharp');
+const Place =require('./../models/placeModel')
+
+exports.getUserFavorites = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const user = await User.findById(userId).populate('favorites');
+  if (!user) {
+    return next(new AppError('User not found.', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      favorites: user.favorites
+    }
+  });
+});
+
+// Add a place to user's favorites
+exports.addUserFavorite = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const { placeId } = req.body;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    return next(new AppError('User not found.', 404));
+  }
+
+  if (!user.favorites.includes(placeId)) {
+    user.favorites.push(placeId);
+    await user.save();
+  }
+
+  const place = await Place.findById(placeId);
+  if (!place) {
+    return next(new AppError('Place not found.', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      place
+    }
+  });
+});
+
+exports.removeFavorite = catchAsync(async (req, res, next) => {
+  const userId = req.user.id;
+  const { placeId } = req.body;
+
+  const user = await User.findById(userId);
+  if (!user) {
+    return next(new AppError('User not found.', 404));
+  }
+
+  user.favorites = user.favorites.filter(id => id.toString() !== placeId);
+  await user.save();
+
+  res.status(204).json({
+    status: 'success',
+    data: null
+  });
+});
 
 const multerStorage = multer.memoryStorage();
 
