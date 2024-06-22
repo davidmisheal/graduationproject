@@ -60,12 +60,6 @@ router
     tourController.createTour
   );
 
-router.patch(
-  '/updatePassword/:id',
-  authController.protect,
-  tourController.updateTourPassword
-);
-
 router
   .route('/:id')
   .get(tourController.getTour)
