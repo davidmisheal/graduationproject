@@ -1654,7 +1654,7 @@ htmml {
 	margin: 0 auto;
 	height: fit-content;
 }
-.requests-body{
+.requests-body,.filtertour-body{
 	background-color: white;
 	padding: 10px;
 	border-radius: 5px;
@@ -1662,7 +1662,7 @@ htmml {
 	width: 100%;
 	margin-bottom: 30px;
 }
-.requests-element{
+.requests-element,.filtertour-element{
 	padding: 20px;
 	display: grid;
 	grid-template-columns: 8fr 7fr 2fr;

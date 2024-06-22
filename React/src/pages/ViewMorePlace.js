@@ -20,7 +20,7 @@ export default function ViewMore() {
           setImage(imgModule.default);
         }
       } catch (error) {
-        console.error("Error loading image:", error);
+        console.error('Error loading image:', error);
       }
     };
 
@@ -30,13 +30,11 @@ export default function ViewMore() {
   useEffect(() => {
     const fetchPlaceById = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:3000/api/v1/place/${id}`
-        );
+        const response = await axios.get(`http://localhost:3000/api/v1/place/${id}`);
         setPlace(response.data);
-        console.log("Fetched place:", response.data);
+        console.log('Fetched place:', response.data);
       } catch (error) {
-        console.error("Error fetching place:", error);
+        console.error('Error fetching place:', error);
       }
     };
 
@@ -44,26 +42,36 @@ export default function ViewMore() {
   }, [id]);
 
   const handleAddToTrip = () => {
-    navigate("/mytrips", { state: place });
+    navigate('/mytrips', { state: place });
   };
 
   const handlePickTourGuide = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/v1/tours");
+      const response = await axios.get('http://localhost:3000/api/v1/tours');
       const toursData = response.data.data.data || [];
-      // Convert place location to lowercase
+
+      // Check if place.location exists and is a string
+      if (!place || !place.location || typeof place.location !== 'string') {
+        console.error('Invalid place location:', place.location);
+        return;
+      }
+
       const placeLocationLower = place.location.toLowerCase();
-      // Filter tours based on location (case insensitive)
-      console.log("tours data:", response.data.data.data);
-      const filteredTours = toursData.filter(
-        (tour) => tour.location.toLowerCase() === placeLocationLower
-      );
-      console.log(filteredTours);
+
+      const filteredTours = toursData.filter(tour => {
+        // Check if tour.location exists and is a string
+        if (!tour.location || typeof tour.location !== 'string') {
+          console.error('Invalid tour location:', tour.location);
+          return false;
+        }
+        return tour.location.toLowerCase() === placeLocationLower;
+      });
+
       setTours(filteredTours); // Set the filtered tours to state
       setShowTours(true); // Show the tours
-      console.log("Filtered tours:", filteredTours);
+      console.log('Filtered tours:', filteredTours);
     } catch (error) {
-      console.error("Error fetching tours:", error);
+      console.error('Error fetching tours:', error);
     }
   };
 
@@ -85,76 +93,73 @@ export default function ViewMore() {
               <p>{place.location}</p>
             </span>
             <span className="viewmore-first-overlay-counters">
-              <i className="fa-solid fa-location-dot fa-xl"></i> <p>1000</p> |{" "}
-              <i className="fa-solid fa-heart fa-xl"></i> <p>20000</p>
+              <i className="fa-solid fa-location-dot fa-xl"></i> <p>1000</p> | <i className="fa-solid fa-heart fa-xl"></i> <p>20000</p>
             </span>
           </div>
         </div>
         <div className="viewmore-second">
           <div className="viewmore-second-left">
             <h2>Description</h2>
-            <p className="viewmore-second-desc">{place.description}</p>
-            <p className="viewmore-second-desc">{place.description2}</p>
-            <p className="viewmore-second-desc">{place.description3}</p>
+            <p className="viewmore-second-desc">
+              {place.description}
+            </p>
+            <p className="viewmore-second-desc">
+              {place.description2}
+            </p><p className="viewmore-second-desc">
+              {place.description3}
+            </p>
           </div>
           <div className="viewmore-second-right">
             <div>
-              <img
-                src={require("../imgs/khan-el-khalili1.jpg")}
-                alt="Khan El Khalili"
-              />
+              <img src={require('../imgs/khan-el-khalili1.jpg')} alt="Khan El Khalili" />
             </div>
             <div>
-              <img
-                src={require("../imgs/Khan-El-Khalili2.jpg")}
-                alt="Khan El Khalili"
-              />
-            </div>
-            <div>
-              <img src={require("../imgs/khan3.jpg")} alt="Khan El Khalili" />
+              <img src={require('../imgs/Khan-El-Khalili2.jpg')} alt="Khan El Khalili" />
+            </div><div>
+              <img src={require('../imgs/khan3.jpg')} alt="Khan El Khalili" />
             </div>
           </div>
         </div>
         <div className="viewmore-third">
           <h3> Price : {place.price}</h3>
           <span>
-            <button
-              className="button-28"
-              role="button"
-              onClick={handleAddToTrip}
-            >
-              Add
-            </button>
-            <button
-              className="button-28"
-              role="button"
-              onClick={handlePickTourGuide}
-            >
-              Pick a TourGuide
-            </button>
+            <button className="button-28" role="button" onClick={handleAddToTrip}>Add</button>
+            <button className="button-28" role="button" onClick={handlePickTourGuide}>Pick a TourGuide</button>
           </span>
         </div>
         {showTours && (
           <div className="tour-guide-list">
             <h3>Select a Tour Guide</h3>
-            <ul>
+            <div className="filtertour-body">
               {tours.length > 0 ? (
                 tours.map((tour) => (
-                  <li key={tour._id}>
-                    <p>{tour.name}</p>
-                    <p>{tour.email}</p>
-                    <p>{tour.price}</p>
-                    {/* Add more details as needed */}
-                  </li>
+                  <>
+                    <hr />
+                    <div className="filtertour-element">
+                      <div>
+                        <h4>{tour.name}</h4>
+                        <p className="requests-email">{tour.email}</p>
+                        <p className="requests-price">Price: <strong>{tour.price} L.E</strong></p>
+                      </div>
+                      <div>
+                        <h5>Location:</h5>
+                        <p className="requests-status">{tour.location}</p>
+                      </div>
+                      <div className="requests-button">
+                        <button>Book</button>
+                      </div>
+                    </div>
+                  </>
                 ))
               ) : (
                 <p>No tours available</p>
               )}
-            </ul>
+            </div>
           </div>
         )}
       </div>
-      <Footer name="footer-main" />
+      <Footer name='footer-main' />
     </>
   );
 }
+

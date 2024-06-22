@@ -89,7 +89,7 @@ exports.signupTour = catchAsync(async (req, res) => {
     email,
     password,
     summary,
-    startLocation,
+    location,
     price,
     maxGroupSize
   } = req.body;
@@ -99,7 +99,7 @@ exports.signupTour = catchAsync(async (req, res) => {
     email,
     password,
     summary,
-    startLocation,
+    location,
     price,
     maxGroupSize,
     approved: false

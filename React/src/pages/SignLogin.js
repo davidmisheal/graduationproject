@@ -23,7 +23,7 @@ export default function SignLogin() {
     photo: "",
     role: "user",
     price: "",
-    startLocation: "",
+    location: "",
   });
 
   const [errors, setErrors] = useState({
@@ -34,7 +34,7 @@ export default function SignLogin() {
     photo: "",
     role: "",
     price: "",
-    startLocation: "",
+    location: "",
   });
 
   const navigate = useNavigate();
@@ -150,13 +150,14 @@ export default function SignLogin() {
         }));
       }
     } else if (userState === "tourguide") {
-      const { name, email, password, price, role } = formData;
+      const { name, email, password,location, price, role } = formData;
       let isValid = true;
       const newErrors = {
         name: "",
         email: "",
         password: "",
         price: "",
+        location:""
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -180,7 +181,7 @@ export default function SignLogin() {
       try {
         const response = await axios.post(
           "http://localhost:3000/api/v1/tours/signup",
-          { name, email, password, price, role }
+          { name, email, password,location, price, role }
         );
         setTour(response.data);
         console.log("Sign-up successful!", response.data);
@@ -472,6 +473,14 @@ export default function SignLogin() {
                       value={formData.price}
                       onChange={(e) =>
                         setFormData({ ...formData, price: e.target.value })
+                      }
+                    />
+                    <input
+                      type="text"
+                      placeholder="Location"
+                      value={formData.location}
+                      onChange={(e) =>
+                        setFormData({ ...formData, location: e.target.value })
                       }
                     />
 
