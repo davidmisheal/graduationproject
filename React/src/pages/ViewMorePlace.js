@@ -49,12 +49,33 @@ export default function ViewMore() {
         try {
             const response = await axios.get('http://localhost:3000/api/v1/tours');
             const toursData = response.data.data.data || [];
+<<<<<<< HEAD
             // Convert place location to lowercase
             const placeLocationLower = place.location.toLowerCase();
             // Filter tours based on location (case insensitive)
             console.log('tours data:',response.data.data.data)
             const filteredTours = toursData.filter(tour => tour.location.toLowerCase() === placeLocationLower);
             console.log(filteredTours)
+=======
+
+            // Check if place.location exists and is a string
+            if (!place || !place.location || typeof place.location !== 'string') {
+                console.error('Invalid place location:', place.location);
+                return;
+            }
+
+            const placeLocationLower = place.location.toLowerCase();
+
+            const filteredTours = toursData.filter(tour => {
+                // Check if tour.location exists and is a string
+                if (!tour.location || typeof tour.location !== 'string') {
+                    console.error('Invalid tour location:', tour.location);
+                    return false;
+                }
+                return tour.location.toLowerCase() === placeLocationLower;
+            });
+
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
             setTours(filteredTours); // Set the filtered tours to state
             setShowTours(true); // Show the tours
             console.log('Filtered tours:', filteredTours);
@@ -118,6 +139,7 @@ export default function ViewMore() {
                 {showTours && (
                     <div className="tour-guide-list">
                         <h3>Select a Tour Guide</h3>
+<<<<<<< HEAD
                         <ul>
                             {tours.length > 0 ? (
                                 tours.map((tour) => (
@@ -127,11 +149,37 @@ export default function ViewMore() {
                                         <p>{tour.price}</p>
                                         {/* Add more details as needed */}
                                     </li>
+=======
+                        <div className="filtertour-body">
+                            {tours.length > 0 ? (
+                                tours.map((tour) => (
+                                    <>
+                                        <hr />
+                                        <div className="filtertour-element">
+                                            <div>
+                                                <h4>{tour.name}</h4>
+                                                <p className="requests-email">{tour.email}</p>
+                                                <p className="requests-price">Price: <strong>{tour.price} L.E</strong></p>
+                                            </div>
+                                            <div>
+                                                <h5>Location:</h5>
+                                                <p className="requests-status">{tour.location}</p>
+                                            </div>
+                                            <div className="requests-button">
+                                                <button>Book</button>
+                                            </div>
+                                        </div>
+                                    </>
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
                                 ))
                             ) : (
                                 <p>No tours available</p>
                             )}
+<<<<<<< HEAD
                         </ul>
+=======
+                        </div>
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
                     </div>
                 )}
             </div>

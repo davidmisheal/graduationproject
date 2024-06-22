@@ -150,13 +150,21 @@ export default function SignLogin() {
         }));
       }
     } else if (userState === "tourguide") {
+<<<<<<< HEAD
       const { name, email, password, price, role } = formData;
+=======
+      const { name, email, password, price,location, role } = formData;
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
       let isValid = true;
       const newErrors = {
         name: "",
         email: "",
         password: "",
         price: "",
+<<<<<<< HEAD
+=======
+        location:""
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -180,7 +188,11 @@ export default function SignLogin() {
       try {
         const response = await axios.post(
           "http://localhost:3000/api/v1/tours/signup",
+<<<<<<< HEAD
           { name, email, password, price, role }
+=======
+          { name, email, password, price,location, role }
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
         );
         setTour(response.data);
         console.log("Sign-up successful!", response.data);
@@ -469,6 +481,17 @@ export default function SignLogin() {
                         setFormData({ ...formData, price: e.target.value })
                       }
                     />
+<<<<<<< HEAD
+=======
+                     <input
+                      type="text"
+                      placeholder="Location"
+                      value={formData.location}
+                      onChange={(e) =>
+                        setFormData({ ...formData, location: e.target.value })
+                      }
+                    />
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
                     
                     {errors.password && (
                       <p style={{ color: "red", fontWeight: "bold", fontSize: 12 }}>

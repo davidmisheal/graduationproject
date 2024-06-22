@@ -75,8 +75,11 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/place', placeRouter);
 app.use('/api/v1/booking', bookingRouter);
+<<<<<<< HEAD
 app.use('/images', express.static('public/img/tours'));
 app.use('/images', express.static('public/img/users'));
+=======
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));

@@ -66,8 +66,11 @@ router
   .patch(
     authController.protect,
     authController.restrictTo('admin', 'lead-guide'),
+<<<<<<< HEAD
     tourController.uploadTourImages,
     tourController.resizeTourImages,
+=======
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
     tourController.updateTour
   )
   .delete(
@@ -76,4 +79,8 @@ router
     tourController.deleteTour
   );
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+module.exports = router;  
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea

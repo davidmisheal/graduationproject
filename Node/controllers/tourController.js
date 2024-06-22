@@ -4,6 +4,7 @@ const AppError = require('./../utils/appError');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const factory = require('./handlerFactory');
+<<<<<<< HEAD
 const multer = require('multer');
 const sharp = require('sharp');
 
@@ -62,6 +63,8 @@ exports.resizeTourImages = catchAsync(async (req, res, next) => {
   next();
 });
 
+=======
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
 // Function to sign a JWT token based on the tour's ID
 const signToken = id => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -89,7 +92,11 @@ exports.signupTour = catchAsync(async (req, res) => {
     email,
     password,
     summary,
+<<<<<<< HEAD
     startLocation,
+=======
+    location,
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
     price,
     maxGroupSize
   } = req.body;
@@ -99,7 +106,11 @@ exports.signupTour = catchAsync(async (req, res) => {
     email,
     password,
     summary,
+<<<<<<< HEAD
     startLocation,
+=======
+    location,
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
     price,
     maxGroupSize,
     approved: false
@@ -334,4 +345,8 @@ exports.getDistances = catchAsync(async (req, res, next) => {
       data: distances
     }
   });
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
