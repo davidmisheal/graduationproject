@@ -7,9 +7,13 @@ export default function ChangePassword() {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const { user } = useUser(); // Assuming `user` includes the user's token
+  const { user } = useUser(); // Ensure that user includes the user's token
 
   const handleChangePassword = async () => {
+    if (!user || !user.token) {
+      alert("User is not logged in or token is not available");
+      return;
+    }
     if (newPassword !== confirmNewPassword) {
       alert("New passwords do not match");
       return;

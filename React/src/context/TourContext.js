@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 
-const TourContext = createContext(null);
+const TourContext = createContext();
 
 export const useTour = () => useContext(TourContext);
 
@@ -9,7 +9,7 @@ export const TourProvider = ({ children }) => {
 
   const tourLogout = () => {
     setTour(null); // Clear tour guide from context
-    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"; // Clear JWT cookie
+    document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   };
 
   return (
