@@ -1386,56 +1386,151 @@ htmml {
 }
 
 /*--------------profile page-------------------*/
+/* Profile Page Main Container */
 .profile-main {
-	background-color: black;
-	height: 100vh;
-}
-
-.profile-part {
-	border-radius: 10px;
-	width: 50%;
-	height: 80vh;
-	margin: auto;
-	color: white;
 	display: flex;
 	flex-direction: column;
-	justify-content: center;
-	text-align: center;
 	align-items: center;
-	padding: 30px;
-	position: relative;
-	top: 50px;
+	padding: 20px;
+	background-color: #f9f9f9;
+	min-height: 100vh;
+	margin: 30px auto;
+}
+.profile-title{text-align: left;}
+/* Profile Part */
+.profile-part {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	background: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	margin-bottom: 20px;
+	width: 100%;
+	max-width: 600px;
 }
 
 .profile-part i {
-	border-radius: 100px;
-	border: 1px solid rgb(58, 57, 57);
-	padding: 60px 50px;
+	font-size: 80px;
+	color: #333;
+	margin-bottom: 20px;
 }
 
-.profile-part h2 {
-	font-size: 40px;
+.profile-email,
+.profile-pass {
+	width: 100%;
+	margin-bottom: 20px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
 }
 
-.profile-part p {
-	color: #949494;
-	font-weight: 500;
+.profile-email h2,
+.profile-pass h2 ,.change-main p{
+	font-size: 15px;
+	color: black;
+}
+
+.pass-email,.pass-p {
+	margin: 5px auto;
+	font-size: 18px;
+	color: #777;
+	border-radius: 5px;
+	border: 1px solid #d6dcdd;
+	padding: 10px 0px;
+	min-width: 220px;
+	max-width: 550px;
 }
 
 .profile-pass {
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	row-gap: 30px;
 }
 
-.profile-pass i {
-	border: none;
+.changepass {
+	font-size: 15px;
+	color: #717d7f;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+}
+.changepass:hover{
+	color: black;
+}
+/* Profile Picture */
+.profile-picture {
+	width: 120px;
+	height: 120px;
+	border-radius: 50%;
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+
+.profile-picture img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Favorites Section */
+.favorites-section {
+	background: #fff;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	width: 100%;
+	max-width: 600px;
+}
+
+.favorites-section h2 {
+	margin: 0 0 20px;
+	font-size: 24px;
+	color: black;
+	text-align: center;
+}
+
+.favorites-list {
+	list-style-type: none;
 	padding: 0;
-	position: relative;
-	left: 30px;
 }
 
+.favorite-item {
+	margin: 10px 0;
+	padding: 10px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	background-color: #f7f7f7;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	column-gap: 5px;
+}
+.favorite-item div{
+	display: flex;
+	flex-direction: row;
+	column-gap: 5px;
+}
+.favorites-list img{
+	width: 80px;
+	border-radius: 4px;
+}
+.favorite-item h4 {
+	margin: 0 0 5px;
+	font-size: 20px;
+	color: #333;
+}
+
+.favorite-item p {
+	margin: 0;
+	font-size: 16px;
+	color: #666;
+}
 /*---------------change component------------*/
 .change-main {
 	height: fit-content;
@@ -1443,29 +1538,38 @@ htmml {
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-	position: relative;
-	left: 50px;
 }
 
 .change-main p {
-	color: white;
+	color: black;
+	font-weight: bold;
 }
 
 .change-main input {
 	border-radius: 5px;
-	border: 1px solid rgb(66, 66, 66);
-	background-color: black;
-	padding: 5px 15px;
-	color: #555;
+	border: 1px solid #d6dcdd;
+	background-color: white;
+	padding: 10px 0px;
+	min-width: 220px;
+	max-width:550px ;
+	color: #777;
+	text-align: center;
 }
 
-.change-main button {
+.change-main button ,.favourite-remove{
 	margin-top: 10px;
 	background-color: black;
 	color: gray;
-	border: 1px solid rgb(69, 68, 68);
+	border: 1px solid rgb(0, 0, 0);
 	border-radius: 5px;
 	padding: 10px;
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+}
+.change-main button:hover,.favourite-remove:hover{
+	background-color: white;
+	border: 1px solid black;
+	color: black;
 }
 
 /*-----------my trips------------*/
@@ -1477,7 +1581,8 @@ htmml {
 	align-items: start;
 	margin: auto;
 }
-.mytrips-body{
+
+.mytrips-body {
 	background-color: white;
 }
 
@@ -1588,18 +1693,21 @@ htmml {
 	box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-.viewmore-third{
+.viewmore-third {
 	display: flex;
-	flex-direction: column;justify-content: center;
+	flex-direction: column;
+	justify-content: center;
 	align-items: start;
 }
-.viewmore-third span{
+
+.viewmore-third span {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	column-gap: 10px;
 }
+
 .button-28 {
 	appearance: none;
 	background-color: transparent;
@@ -1645,7 +1753,7 @@ htmml {
 }
 
 /*------requests--------*/
-.requests{
+.requests {
 	display: flex;
 	flex-direction: column;
 	width: 80%;
@@ -1654,7 +1762,9 @@ htmml {
 	margin: 0 auto;
 	height: fit-content;
 }
-.requests-body,.filtertour-body{
+
+.requests-body,
+.filtertour-body {
 	background-color: white;
 	padding: 10px;
 	border-radius: 5px;
@@ -1662,7 +1772,9 @@ htmml {
 	width: 100%;
 	margin-bottom: 30px;
 }
-.requests-element,.filtertour-element{
+
+.requests-element,
+.filtertour-element {
 	padding: 20px;
 	display: grid;
 	grid-template-columns: 8fr 7fr 2fr;
@@ -1671,45 +1783,55 @@ htmml {
 	width: 90%;
 	margin: auto;
 }
-.requests-element h4,h5{
+
+.requests-element h4,
+h5 {
 	margin: 0;
 }
-.requests-element h4{
+
+.requests-element h4 {
 	font-size: 30px;
 	font-weight: 500;
 }
-.requests-email{
+
+.requests-email {
 	color: gray;
 	font-size: 14px;
 	font-weight: 300;
 }
-.requests-price{
+
+.requests-price {
 	color: gray;
-	margin-top:50px ;
+	margin-top: 50px;
 }
-.requests-price strong{
+
+.requests-price strong {
 	color: black;
 	font-weight: 700;
 }
-.requests-element h5{
+
+.requests-element h5 {
 	font-size: 12px;
 	font-weight: 600;
 	color: rgb(199, 199, 199);
 }
-.requests-status{
+
+.requests-status {
 	font-size: 30px;
 	font-weight: 700;
 	color: rgb(227, 188, 59);
 	margin-top: 10px;
-} 
-.requests-button{
+}
+
+.requests-button {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	row-gap: 10px;
 }
-.requests-button button{
+
+.requests-button button {
 	width: 150px;
 	padding: 10px;
 	background-color: white;
@@ -1718,7 +1840,8 @@ htmml {
 	transition: all 0.2s ease-in-out;
 	cursor: pointer;
 }
-.requests-button button:hover{
+
+.requests-button button:hover {
 	background-color: black;
 	color: white;
 }
