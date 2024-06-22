@@ -51,24 +51,16 @@ function TourGuides() {
               img={tour.imageCover}
               name={tour.name}
               brief={tour.summary}
-<<<<<<< HEAD
               city={
                 tour.startLocation
                   ? tour.startLocation.description
                   : "Location not specified"
               }
-=======
-              city={tour.startLocation.description}
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
             />
           ))}
         </div>
       </div>
-<<<<<<< HEAD
       <Footer />
-=======
-      <Footer name='footer-main' />
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
     </>
   );
 }

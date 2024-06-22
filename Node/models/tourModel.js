@@ -29,11 +29,7 @@ const tourSchema = new mongoose.Schema(
       type: String,
       required: [false, 'Please confirm your password'],
       validate: {
-<<<<<<< HEAD
         validator: function(el) {
-=======
-        validator: function (el) {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
           return el === this.password;
         },
         message: 'Passwords are not the same!'
@@ -77,11 +73,7 @@ const tourSchema = new mongoose.Schema(
     priceDiscount: {
       type: Number,
       validate: {
-<<<<<<< HEAD
         validator: function(val) {
-=======
-        validator: function (val) {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
           // this only points to current doc on NEW document creation
           return val < this.price;
         },
@@ -99,12 +91,8 @@ const tourSchema = new mongoose.Schema(
     },
     imageCover: {
       type: String,
-<<<<<<< HEAD
       required: [false, 'A tour must have a cover image'],
       default: 'default.jpg'
-=======
-      required: [false, 'A tour must have a cover image']
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
     },
     images: [String],
     createdAt: {
@@ -117,13 +105,8 @@ const tourSchema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
-<<<<<<< HEAD
     role: { type: String, default: 'tourguide' },
     location: { type: String, required: false },
-=======
-    role: { type: String, default: "tourguide" },
-    location:{type : String, required : true},
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
     approved: { type: Boolean, default: false },
     guides: [
       {
@@ -138,22 +121,14 @@ const tourSchema = new mongoose.Schema(
   }
 );
 
-<<<<<<< HEAD
 tourSchema.pre('save', async function(next) {
-=======
-tourSchema.pre('save', async function (next) {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   next();
 });
 
-<<<<<<< HEAD
 tourSchema.methods.correctPassword = async function(
-=======
-tourSchema.methods.correctPassword = async function (
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   candidatePassword,
   userPassword
 ) {
@@ -164,11 +139,7 @@ tourSchema.methods.correctPassword = async function (
 tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
 
-<<<<<<< HEAD
 tourSchema.virtual('durationWeeks').get(function() {
-=======
-tourSchema.virtual('durationWeeks').get(function () {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   return this.duration / 7;
 });
 
@@ -180,11 +151,7 @@ tourSchema.virtual('reviews', {
 });
 
 // DOCUMENT MIDDLEWARE: runs before .save() and .create()
-<<<<<<< HEAD
 tourSchema.pre('save', function(next) {
-=======
-tourSchema.pre('save', function (next) {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   this.slug = slugify(this.name, { lower: true });
   next();
 });
@@ -207,22 +174,14 @@ tourSchema.pre('save', function (next) {
 
 // QUERY MIDDLEWARE
 // tourSchema.pre('find', function(next) {
-<<<<<<< HEAD
 tourSchema.pre(/^find/, function(next) {
-=======
-tourSchema.pre(/^find/, function (next) {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   this.find({ secretTour: { $ne: true } });
 
   this.start = Date.now();
   next();
 });
 
-<<<<<<< HEAD
 tourSchema.pre(/^find/, function(next) {
-=======
-tourSchema.pre(/^find/, function (next) {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   this.populate({
     path: 'guides',
     select: '-__v -passwordChangedAt'
@@ -231,11 +190,7 @@ tourSchema.pre(/^find/, function (next) {
   next();
 });
 
-<<<<<<< HEAD
 tourSchema.post(/^find/, function(docs, next) {
-=======
-tourSchema.post(/^find/, function (docs, next) {
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
   next();
 });
@@ -250,8 +205,4 @@ tourSchema.post(/^find/, function (docs, next) {
 
 const Tour = mongoose.model('Tour', tourSchema);
 
-<<<<<<< HEAD
 module.exports = Tour;
-=======
-module.exports = Tour;
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea

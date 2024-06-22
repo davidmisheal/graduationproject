@@ -3,7 +3,6 @@ const catchAsync = require('./../utils/catchAsync');
 const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 const multer = require('multer');
-<<<<<<< HEAD
 const sharp = require('sharp');
 
 const multerStorage = multer.memoryStorage();
@@ -13,22 +12,10 @@ const multerFilter = (req, file, cb) => {
     cb(null, true);
   } else {
     cb(new AppError('Not an image! Please upload only images.', 400), false);
-=======
-
-// Multer configuration
-const storage = multer.memoryStorage();
-
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-    cb(null, true);
-  } else {
-    cb(new Error('Unsupported file type'), false);
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
   }
 };
 
 const upload = multer({
-<<<<<<< HEAD
   storage: multerStorage,
   fileFilter: multerFilter
 });
@@ -48,59 +35,6 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
 
   next();
 });
-=======
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5 // 5 MB
-  },
-  fileFilter: fileFilter
-});
-
-// Route handlers
-exports.uploadImage = [
-  upload.single('photo'), // Make sure the field name is 'photo'
-  async (req, res) => {
-    try {
-      if (!req.file) {
-        throw new Error('File not found');
-      }
-
-      console.log('File:', req.file); // Log file details
-
-      const user = await User.findById(req.user.id);
-      if (!user) {
-        throw new Error('User not found');
-      }
-
-      user.photo = req.file.buffer;
-      await user.save();
-
-      res.status(200).send({ message: 'Photo uploaded successfully' });
-    } catch (error) {
-      console.error('Error uploading photo:', error); // Log the error
-      res.status(500).send({ message: error.message });
-    }
-  }
-];
-
-exports.getImage = async (req, res) => {
-  try {
-    const user = await User.findById(req.params.userId);
-
-    if (!user || !user.photo) {
-      throw new Error('No photo found');
-    }
-
-    res.set('Content-Type', 'image/jpeg'); // Assuming JPEG format
-    res.send(user.photo);
-  } catch (error) {
-    console.error('Error retrieving photo:', error); // Log the error
-    res.status(404).send({ message: 'Unable to retrieve photo' });
-  }
-};
-
-// Other userController methods...
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};

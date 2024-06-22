@@ -16,7 +16,6 @@ router.use(authController.protect);
 
 router.patch('/updateMyPassword', authController.updatePassword);
 router.get('/me', userController.getMe, userController.getUser);
-<<<<<<< HEAD
 router.patch(
   '/updateMe',
   userController.uploadUserPhoto,
@@ -27,13 +26,6 @@ router.delete('/deleteMe', userController.deleteMe);
 
 //router.post('/me/photo', userController.uploadImage); // Ensure this line is correct
 //router.get('/:userId/photo', userController.getImage);
-=======
-router.patch('/updateMe', userController.updateMe);
-router.delete('/deleteMe', userController.deleteMe);
-
-router.post('/me/photo', userController.uploadImage); // Ensure this line is correct
-router.get('/:userId/photo', userController.getImage);
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
 
 router.use(authController.restrictTo('admin'));
 
