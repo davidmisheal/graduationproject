@@ -23,7 +23,7 @@ export default function SignLogin() {
     photo: "",
     role: "user",
     price: "",
-    startLocation: ""
+    startLocation: "",
   });
 
   const [errors, setErrors] = useState({
@@ -34,7 +34,7 @@ export default function SignLogin() {
     photo: "",
     role: "",
     price: "",
-    startLocation: ""
+    startLocation: "",
   });
 
   const navigate = useNavigate();
@@ -68,11 +68,11 @@ export default function SignLogin() {
     if (option === "user") {
       setShowUserIn(true);
       setShowTourGuideIn(false);
-      setUserState('user')
+      setUserState("user");
     } else if (option === "tourguide") {
       setShowUserIn(false);
       setShowTourGuideIn(true);
-      setUserState('tourguide')
+      setUserState("tourguide");
     }
   };
 
@@ -150,21 +150,13 @@ export default function SignLogin() {
         }));
       }
     } else if (userState === "tourguide") {
-<<<<<<< HEAD
       const { name, email, password, price, role } = formData;
-=======
-      const { name, email, password, price,location, role } = formData;
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
       let isValid = true;
       const newErrors = {
         name: "",
         email: "",
         password: "",
         price: "",
-<<<<<<< HEAD
-=======
-        location:""
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -188,11 +180,7 @@ export default function SignLogin() {
       try {
         const response = await axios.post(
           "http://localhost:3000/api/v1/tours/signup",
-<<<<<<< HEAD
           { name, email, password, price, role }
-=======
-          { name, email, password, price,location, role }
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
         );
         setTour(response.data);
         console.log("Sign-up successful!", response.data);
@@ -216,7 +204,7 @@ export default function SignLogin() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (userState == 'user') {
+    if (userState == "user") {
       const { email, password } = formData;
       const newErrors = { email: "", password: "" };
 
@@ -236,8 +224,8 @@ export default function SignLogin() {
         );
         setUser(response.data); // Store user data in context
         console.log("Login successful!", response.data);
-        window.localStorage.setItem('isLoggedIn', true)
-        window.localStorage.setItem('userData', JSON.stringify(response.data))
+        window.localStorage.setItem("isLoggedIn", true);
+        window.localStorage.setItem("userData", JSON.stringify(response.data));
         navigate("/");
       } catch (error) {
         console.error("Login failed!", error);
@@ -246,8 +234,7 @@ export default function SignLogin() {
           formError: error.response.data.message || "An error occurred",
         }));
       }
-    }
-    else if (userState == 'tourguide') {
+    } else if (userState == "tourguide") {
       const { email, password } = formData;
       const newErrors = { email: "", password: "" };
 
@@ -267,8 +254,8 @@ export default function SignLogin() {
         );
         setTour(response.data); // Store user data in context
         console.log("Login successful!", response.data);
-        window.localStorage.setItem('isLoggedIn', true)
-        window.localStorage.setItem('userData', JSON.stringify(response.data))
+        window.localStorage.setItem("isLoggedIn", true);
+        window.localStorage.setItem("userData", JSON.stringify(response.data));
         navigate("/");
       } catch (error) {
         console.error("Login failed!", error);
@@ -439,7 +426,13 @@ export default function SignLogin() {
                       }
                     />
                     {errors.password && (
-                      <p style={{ color: "red", fontWeight: "bold", fontSize: 12 }}>
+                      <p
+                        style={{
+                          color: "red",
+                          fontWeight: "bold",
+                          fontSize: 12,
+                        }}
+                      >
                         {errors.password}
                       </p>
                     )}
@@ -481,20 +474,15 @@ export default function SignLogin() {
                         setFormData({ ...formData, price: e.target.value })
                       }
                     />
-<<<<<<< HEAD
-=======
-                     <input
-                      type="text"
-                      placeholder="Location"
-                      value={formData.location}
-                      onChange={(e) =>
-                        setFormData({ ...formData, location: e.target.value })
-                      }
-                    />
->>>>>>> 4ec7396e569ccdb548b011e6522342ac86f157ea
-                    
+
                     {errors.password && (
-                      <p style={{ color: "red", fontWeight: "bold", fontSize: 12 }}>
+                      <p
+                        style={{
+                          color: "red",
+                          fontWeight: "bold",
+                          fontSize: 12,
+                        }}
+                      >
                         {errors.password}
                       </p>
                     )}
