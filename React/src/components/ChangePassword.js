@@ -56,7 +56,7 @@ export default function ChangePassword({ email }) {
         email: email,
       });
 
-      alert("Password reset email sent!");
+      alert("Password reset email sent! Check MailTrap");
     } catch (error) {
       console.error("Error sending password reset email:", error);
       alert("Failed to send password reset email.");

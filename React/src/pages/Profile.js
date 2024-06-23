@@ -3,30 +3,33 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useUser } from "../context/UserContext"; // Import useUser hook
 import ChangePassword from "../components/ChangePassword";
-import axios from 'axios'; // Import axios for making HTTP requests
+import axios from "axios"; // Import axios for making HTTP requests
 import { Link } from "react-router-dom"; // Import Link for navigation
 
 export default function Profile() {
   const [edit, setEdit] = useState(false);
   const { user } = useUser(); // Use the user data
-  const isLoggedIn = window.localStorage.getItem('isLoggedIn');
+  const isLoggedIn = window.localStorage.getItem("isLoggedIn");
   const [userData, setUserData] = useState(() => {
-    const storedUserData = window.localStorage.getItem('userData');
+    const storedUserData = window.localStorage.getItem("userData");
     return storedUserData ? JSON.parse(storedUserData) : null;
   });
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [favorites, setFavorites] = useState([]);
 
   const fetchFavorites = useCallback(async (token) => {
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/users/favorites', {
-        headers: {
-          Authorization: `Bearer ${token}`
+      const response = await axios.get(
+        "http://localhost:3000/api/v1/users/favorites",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
+      );
       return response.data.data.favorites;
     } catch (error) {
-      console.error('Error fetching favorites:', error);
+      console.error("Error fetching favorites:", error);
       return [];
     }
   }, []);
@@ -40,7 +43,7 @@ export default function Profile() {
       }
 
       if (userData.token) {
-        fetchFavorites(userData.token).then(favs => setFavorites(favs));
+        fetchFavorites(userData.token).then((favs) => setFavorites(favs));
       }
     }
   }, [userData, fetchFavorites]);
@@ -49,18 +52,18 @@ export default function Profile() {
     try {
       if (userData && userData.token) {
         const token = userData.token;
-        await axios.delete('http://localhost:3000/api/v1/users/favorites', {
+        await axios.delete("http://localhost:3000/api/v1/users/favorites", {
           headers: {
-            Authorization: `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
           data: {
-            placeId: placeId
-          }
+            placeId: placeId,
+          },
         });
         setFavorites(favorites.filter((place) => place._id !== placeId));
       }
     } catch (error) {
-      console.error('Error removing favorite:', error);
+      console.error("Error removing favorite:", error);
     }
   };
 
@@ -69,12 +72,15 @@ export default function Profile() {
       <>
         <Nav />
         <div className="profile-main">
-          <p>You need to <Link to="/signin">sign in</Link> to view your profile.</p>
+          <p>
+            You need to <Link to="/signin">sign in</Link> to view your profile.
+          </p>
         </div>
         <Footer name="footer-main" />
       </>
     );
   }
+
   return (
     <>
       <Nav />
@@ -82,8 +88,13 @@ export default function Profile() {
         <div className="profile-part">
           <h2 className="profile-title">My Profile</h2>
           <div className="profile-picture">
-            {userData.data.user && userData.data.user.photo ? (
-              <img src={require(`../imgs/${userData.data.user.photo}`)} alt="Profile" />
+            {userData.data.user ? (
+              <img
+                src={require(`../imgs/${
+                  userData.data.user.photo || "default.jpg"
+                }`)}
+                alt="Profile"
+              />
             ) : (
               <i className="fa-solid fa-user fa-2xl"></i>
             )}
@@ -97,8 +108,10 @@ export default function Profile() {
               <h2>Password</h2>
               <p className="pass-p">..............</p>
             </span>
-            <p className="changepass" onClick={() => setEdit(!edit)}>Change Password?</p>
-            {edit && <ChangePassword />}
+            <p className="changepass" onClick={() => setEdit(!edit)}>
+              Change Password?
+            </p>
+            {edit && <ChangePassword email={email} />}
           </span>
         </div>
 
@@ -109,13 +122,17 @@ export default function Profile() {
               {favorites.map((place) => (
                 <li key={place._id} className="favorite-item">
                   <div>
-                    <img src={require(`../imgs/${place.img}`)} alt={place.name} />
                     <span>
                       <h4>{place.name}</h4>
                       <p>{place.location}</p>
                     </span>
                   </div>
-                  <button className="favourite-remove" onClick={() => handleRemoveFavorite(place._id)}>Remove</button>
+                  <button
+                    className="favourite-remove"
+                    onClick={() => handleRemoveFavorite(place._id)}
+                  >
+                    Remove
+                  </button>
                 </li>
               ))}
             </ul>

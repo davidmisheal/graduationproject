@@ -32,7 +32,7 @@ exports.getUserFavorites = catchAsync(async (req, res, next) => {
     }
   });
 });
-// Add a place to user's favorites
+
 exports.addUserFavorite = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
   const { placeId } = req.body;
@@ -42,22 +42,43 @@ exports.addUserFavorite = catchAsync(async (req, res, next) => {
     return next(new AppError('User not found.', 404));
   }
 
-  if (!user.favorites.includes(placeId)) {
+  // Check if the place is already in the user's favorites
+  const alreadyFavorited = user.favorites.includes(placeId);
+
+  if (!alreadyFavorited) {
     user.favorites.push(placeId);
     await user.save();
-  }
 
-  const place = await Place.findById(placeId);
-  if (!place) {
-    return next(new AppError('Place not found.', 404));
-  }
+    // Increment the favorite count for the place
+    const updatedPlace = await Place.findByIdAndUpdate(
+      placeId,
+      { $inc: { favoriteCount: 1 } },
+      { new: true } // Ensures that the returned document is the updated one
+    );
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      place
+    if (!updatedPlace) {
+      return next(new AppError('Place not found.', 404));
     }
-  });
+
+    console.log('Updated place favorite count:', updatedPlace.favoriteCount);
+    res.status(200).json({
+      status: 'success',
+      data: {
+        place: updatedPlace
+      }
+    });
+    console.log('Adding to favorites:', placeId);
+    console.log(
+      'User favorites before:',
+      user.favorites.map(id => id.toString())
+    );
+  } else {
+    console.log('Place already favorited.');
+    res.status(400).json({
+      status: 'error',
+      message: 'Place already added to favorites.'
+    });
+  }
 });
 
 exports.removeFavorite = catchAsync(async (req, res, next) => {
@@ -69,8 +90,13 @@ exports.removeFavorite = catchAsync(async (req, res, next) => {
     return next(new AppError('User not found.', 404));
   }
 
-  user.favorites = user.favorites.filter(id => id.toString() !== placeId);
-  await user.save();
+  if (user.favorites.includes(placeId)) {
+    user.favorites = user.favorites.filter(id => id.toString() !== placeId);
+    await user.save();
+
+    // Decrement the favorite count
+    await Place.findByIdAndUpdate(placeId, { $inc: { favoriteCount: -1 } });
+  }
 
   res.status(204).json({
     status: 'success',
