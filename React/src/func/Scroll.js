@@ -2,20 +2,30 @@ import { useState, useEffect } from "react";
 
 export function Scroll(height) {
   const [isScrolled, setScrolled] = useState(false);
+  function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+      const context = this;
+      clearTimeout(timeout);
+      timeout = setTimeout(() => func.apply(context, args), wait);
+    };
+  }
+  
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
-      const scrollDown = scrollTop > height;
-      setScrolled(scrollDown);
+      setScrolled(scrollTop > height);
     };
 
-    window.addEventListener("scroll", handleScroll);
+    const debouncedHandleScroll = debounce(handleScroll, 100);
+
+    window.addEventListener("scroll", debouncedHandleScroll);
 
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", debouncedHandleScroll);
     };
-  }, []);
+  }, [height]);
 
   return isScrolled;
 }

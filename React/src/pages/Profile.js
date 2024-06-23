@@ -46,10 +46,12 @@ export default function Profile() {
   }, [userData, fetchFavorites]);
 
   const handleRemoveFavorite = async (placeId) => {
+    console.log("Attempting to remove favorite:", placeId);
     try {
       if (userData && userData.token) {
         const token = userData.token;
-        await axios.delete('http://localhost:3000/api/v1/users/favorites', {
+        console.log("User token:", token);
+        const response = await axios.delete('http://localhost:3000/api/v1/users/favorites', {
           headers: {
             Authorization: `Bearer ${token}`
           },
@@ -57,7 +59,9 @@ export default function Profile() {
             placeId: placeId
           }
         });
+        console.log("Remove favorite response:", response);
         setFavorites(favorites.filter((place) => place._id !== placeId));
+        console.log("Updated favorites list:", favorites);
       }
     } catch (error) {
       console.error('Error removing favorite:', error);
@@ -124,7 +128,7 @@ export default function Profile() {
           )}
         </div>
       </div>
-      <Footer name="footer-main" />
+      <Footer name='footer-main' />
     </>
   );
 }

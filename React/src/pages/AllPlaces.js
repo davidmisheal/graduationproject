@@ -45,6 +45,23 @@ export default function All() {
         }
     }, [filterCriteria, places]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const elements = document.querySelectorAll('.filter-options, .card-rec-hist');
+            elements.forEach(element => {
+                const rect = element.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    element.classList.add('visible');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Trigger the scroll handler once on mount
+
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <>
             {isScrolled ? <FloatNav /> : <Nav />}

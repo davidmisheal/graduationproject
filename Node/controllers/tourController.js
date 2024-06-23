@@ -171,7 +171,33 @@ exports.approveTour = catchAsync(async (req, res) => {
   res.status(200).json({ status: 'success', data: { updatedTour } });
 });
 
-// Add additional methods as needed...
+exports.updateTourPassword = catchAsync(async (req, res, next) => {
+  const tourId = req.params.id; // Get the tour ID from the route parameter
+  const tour = await Tour.findById(tourId); // Find the tour directly using the provided ID
+
+  if (!tour) {
+    return next(new AppError('Tour not found.', 404));
+  }
+
+  const { currentPassword, newPassword, confirmNewPassword } = req.body;
+
+  // Ensure the current password matches
+  if (!(await tour.correctPassword(currentPassword, tour.password))) {
+    return next(new AppError('Current password is incorrect.', 401));
+  }
+
+  // Check if new password matches confirmation
+  if (newPassword !== confirmNewPassword) {
+    return next(new AppError('Passwords do not match.', 401));
+  }
+
+  // Update the password and save the tour
+  tour.password = newPassword;
+  await tour.save();
+
+  // Send a new token after password update
+  createSendToken(tour, 200, res);
+});
 
 exports.aliasTopTours = (req, res, next) => {
   req.query.limit = '5';

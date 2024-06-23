@@ -1,32 +1,38 @@
 import React, { useState, useEffect } from "react";
-import ScreenSize from '../func/ScreenSize';
 import { Link } from "react-router-dom";
+import ScreenSize from '../func/ScreenSize';
 import axios from "axios";
 
-export default function CardPlace(props) {
+
+export default function CardPlace({ place }) {
   const [image, setImage] = useState(null);
-  const [isFavorite, setIsFavorite] = useState(false); // New state to handle favorite status
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const isMobile = ScreenSize();
 
   useEffect(() => {
-    const loadImage = async () => {
-      try {
-        const imgModule = await import(`../imgs/${props.place.img}`);
-        setImage(imgModule.default);
-      } catch (error) {
-        console.error('Error loading image:', error);
-      }
-    };
+    if (place && place.img) {
+      const loadImage = async () => {
+        try {
+          const imgModule = await import(`../imgs/${place.img}`);
+          setImage(imgModule.default);
+        } catch (error) {
+          console.error('Error loading image:', error);
+        }
+      };
+      loadImage();
+    }
+  }, [place]);
 
-    loadImage();
-  }, [props.place.img]);
+  useEffect(() => {
+    setIsVisible(true);
+  }, []);
 
-  
   const handleAddToFavorites = async () => {
     try {
       const userData = JSON.parse(window.localStorage.getItem('userData')); // Get the token from local storage
       const response = await axios.post('http://localhost:3000/api/v1/users/favorites', {
-        placeId: props.place._id
+        placeId: place._id
       }, {
         headers: {
           Authorization: `Bearer ${userData.token}`
@@ -42,23 +48,31 @@ export default function CardPlace(props) {
     }
   };
 
+  if (!place) {
+    return <p>Loading...</p>;
+  }
+
   return (
     <>
-      <div className="card-rec-hist">
-        {image && <img src={image} alt={props.place.img} />}
+      <div className={`card-rec-hist ${isVisible ? 'slide-in-up' : ''}`}>
+        {image && <img src={image} alt={place.img} />}
         <span className="card-rec-hist-writings">
-          <h4>{props.place.name}</h4>
-          {isMobile ? <p>View More For Details</p> : <p>{props.place.description}</p>}
+          <h4>{place.name}</h4>
+          {isMobile ? (
+            <p>View More For Details</p>
+          ) : (
+            <p>{place.description}</p>
+          )}
           <span className="card-buttons">
-            <i 
-              className={`fa-solid fa-heart fa-lg ${isFavorite ? 'favorite' : ''}`} // Add a class for styling if needed
+            <i
+              className={`fa-solid fa-heart fa-lg ${isFavorite ? 'favorite' : ''}`}
               onClick={handleAddToFavorites}
               style={{ cursor: 'pointer' }}
             ></i>
           </span>
         </span>
         <span className="button">
-          <Link to={`/viewmore/${props.place._id}`}>View More</Link>
+          <Link to={`/viewmore/${place._id}`}>View More</Link>
         </span>
       </div>
     </>

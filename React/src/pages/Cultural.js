@@ -7,10 +7,29 @@ import culturalData from "../data/places.json"; // Assuming your data file is na
 import { Scroll } from "../func/Scroll";
 import ScreenSize from "../func/ScreenSize";
 import FloatNav from '../components/Float-nav'
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Cultural() {
     const isMobile = ScreenSize()
     const isScrolled = Scroll(250)
+    const [filteredData, setFilteredData] = useState([])
+
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/v1/place');
+                const culturalPLaces = response.data.filter(place => place.tourism == 'cultural')
+                console.log("places:",culturalPLaces)  
+                setFilteredData(culturalPLaces); // Initialize filteredData with all places
+            } catch (error) {
+                console.error('Error fetching places:', error);
+            }
+        };
+
+        fetchPlaces();
+    }, []);
+
     return (
         <>
             {isScrolled ? <FloatNav /> : <Nav />}
@@ -29,14 +48,16 @@ export default function Cultural() {
                 <div className="rec-hist-part">
                     <h2>Recommended Places</h2>
                     <div className="cards-rec-hist">
-                        {culturalData.map(place => (
-                            <CardPlace
-                                key={place.title}
-                                title={place.title}
-                                desc={place.desc}
-                                img={place.img}
-                            />
-                        ))}
+                        {filteredData && filteredData.length > 0 ? (
+                            filteredData.map((place, index) => (
+                                <CardPlace
+                                    key={index}
+                                    place={place} // Pass the whole place object to CardPlace
+                                />
+                            ))
+                        ) : (
+                            <p>No places found.</p>
+                        )}
                     </div>
                 </div>
             </div>
