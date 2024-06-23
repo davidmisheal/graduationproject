@@ -52,8 +52,8 @@ function TourGuides() {
               name={tour.name}
               brief={tour.summary}
               city={
-                tour.startLocation
-                  ? tour.startLocation.description
+                tour.location
+                  ? <p>{tour.location}</p>
                   : "Location not specified"
               }
             />

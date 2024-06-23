@@ -7,12 +7,28 @@ import data from "../data/places.json";
 import { Scroll } from "../func/Scroll";
 import ScreenSize from "../func/ScreenSize";
 import FloatNav from '../components/Float-nav'
+import { useState, useEffect } from "react";
+import axios from "axios";
 
 export default function Nautical() {
     const isMobile = ScreenSize()
-    // Extracting the nautical tourism places data from the imported JSON file
-    const nauticalPlaces = data.filter(place => place.tourism === "nautical");
+    // Filter the data to extract only the places related to religious tourism
+    const [filteredData, setFilteredData] = useState([])
     const isScrolled = Scroll(250)
+
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/v1/place');
+                const nauticalPlaces = response.data.filter(place => place.tourism == 'nautical')
+                setFilteredData(nauticalPlaces); // Initialize filteredData with all places
+            } catch (error) {
+                console.error('Error fetching places:', error);
+            }
+        };
+
+        fetchPlaces();
+    }, []);
     return (
         <>
             {isScrolled ? <FloatNav /> : <Nav />}
@@ -33,14 +49,16 @@ export default function Nautical() {
                     <h2>Recommended Places</h2>
                     <div className="cards-rec-hist">
                         {/* Map over the nauticalPlaces array and render CardPlace components */}
-                        {nauticalPlaces.map((place, index) => (
-                            <CardPlace
-                                key={index}
-                                title={place.title}
-                                desc={place.desc}
-                                img={place.img}
-                            />
-                        ))}
+                        {filteredData && filteredData.length > 0 ? (
+                            filteredData.map((place, index) => (
+                                <CardPlace
+                                    key={index}
+                                    place={place} // Pass the whole place object to CardPlace
+                                />
+                            ))
+                        ) : (
+                            <p>No places found.</p>
+                        )}
                     </div>
                 </div>
             </div>

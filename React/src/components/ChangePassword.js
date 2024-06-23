@@ -6,11 +6,7 @@ export default function ChangePassword({ email }) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const { user } = useUser();
-
-  useEffect(() => {
-    console.log("User in ChangePassword:", user);
-  }, [user]);
+  const { user } = useUser(); // Assuming `user` includes the user's token
 
   const handleChangePassword = async () => {
     if (!user || !user.token) {

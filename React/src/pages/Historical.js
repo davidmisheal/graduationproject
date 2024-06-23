@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import Category_part from "../components/Category_part";
@@ -7,12 +7,28 @@ import data from "../data/places.json"; // Import your data file containing the 
 import { Scroll } from "../func/Scroll";
 import ScreenSize from "../func/ScreenSize";
 import FloatNav from '../components/Float-nav'
+import axios from "axios";
 
 export default function Historical() {
     const isMobile = ScreenSize()
     // Filter the data to get only the places with historical tourism
-    const historicalPlaces = data.filter(place => place.tourism === "historical");
+    const [filteredData, setFilteredData] = useState([])
     const isScrolled = Scroll(250)
+
+    useEffect(() => {
+        const fetchPlaces = async () => {
+            try {
+                const response = await axios.get('http://localhost:3000/api/v1/place');
+                const historicalPlaces = response.data.filter(place => place.tourism == 'historical')
+                setFilteredData(historicalPlaces); // Initialize filteredData with all places
+            } catch (error) {
+                console.error('Error fetching places:', error);
+            }
+        };
+
+        fetchPlaces();
+    }, []);
+
     return (
         <>
             {isScrolled ? <FloatNav /> : <Nav />}
@@ -31,14 +47,17 @@ export default function Historical() {
                     <h2>Recommended Places</h2>
                     <div className="cards-rec-hist">
                         {/* Map through the filtered historical places and render CardPlace components */}
-                        {historicalPlaces.map(place => (
-                            <CardPlace
-                                key={place.title}
-                                title={place.title}
-                                desc={place.desc}
-                                img={place.img}
-                            />
-                        ))}
+                        {filteredData && filteredData.length > 0 ? (
+                            filteredData.map((place, index) => (
+                                <CardPlace
+                                    key={index}
+                                    place={place} // Pass the whole place object to CardPlace
+                                />
+                            ))
+                        ) : (
+                            <p>No places found.</p>
+                        )}
+
                     </div>
                 </div>
             </div>

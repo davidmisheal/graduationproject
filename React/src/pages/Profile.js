@@ -26,7 +26,12 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         }
+<<<<<<< HEAD
       );
+=======
+      });
+      console.log(response.data.data)
+>>>>>>> c5a00ae0e7491d381eb0aaa77e9b35efc4f67e48
       return response.data.data.favorites;
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -49,10 +54,16 @@ export default function Profile() {
   }, [userData, fetchFavorites]);
 
   const handleRemoveFavorite = async (placeId) => {
+    console.log("Attempting to remove favorite:", placeId);
     try {
       if (userData && userData.token) {
         const token = userData.token;
+<<<<<<< HEAD
         await axios.delete("http://localhost:3000/api/v1/users/favorites", {
+=======
+        console.log("User token:", token);
+        const response = await axios.delete('http://localhost:3000/api/v1/users/favorites', {
+>>>>>>> c5a00ae0e7491d381eb0aaa77e9b35efc4f67e48
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -60,7 +71,9 @@ export default function Profile() {
             placeId: placeId,
           },
         });
+        console.log("Remove favorite response:", response);
         setFavorites(favorites.filter((place) => place._id !== placeId));
+        console.log("Updated favorites list:", favorites);
       }
     } catch (error) {
       console.error("Error removing favorite:", error);
@@ -122,6 +135,14 @@ export default function Profile() {
               {favorites.map((place) => (
                 <li key={place._id} className="favorite-item">
                   <div>
+<<<<<<< HEAD
+=======
+                    {place.img ? (
+                      <img src={require(`../imgs/${place.img}`)} alt={place.name} />
+                    ) : (
+                      <div className="no-image-placeholder">No Image Available</div>
+                    )}
+>>>>>>> c5a00ae0e7491d381eb0aaa77e9b35efc4f67e48
                     <span>
                       <h4>{place.name}</h4>
                       <p>{place.location}</p>
@@ -141,7 +162,7 @@ export default function Profile() {
           )}
         </div>
       </div>
-      <Footer name="footer-main" />
+      <Footer name='footer-main' />
     </>
   );
 }

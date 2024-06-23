@@ -12,7 +12,7 @@ exports.getUserFavorites = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(userId).populate({
     path: 'favorites',
-    select: 'name description' // Adjust according to your Place model's attributes
+    select: 'name location img' // Adjust according to your Place model's attributes
   });
 
   if (!user) {

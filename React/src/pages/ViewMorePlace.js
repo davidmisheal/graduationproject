@@ -10,6 +10,7 @@ export default function ViewMore() {
   const [image, setImage] = useState(null);
   const [tours, setTours] = useState([]); // Initialize as an empty array
   const [showTours, setShowTours] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,6 +70,7 @@ export default function ViewMore() {
 
       setTours(filteredTours); // Set the filtered tours to state
       setShowTours(true); // Show the tours
+      setIsVisible(true); // Make the tour guide list visible
       console.log('Filtered tours:', filteredTours);
     } catch (error) {
       console.error('Error fetching tours:', error);
@@ -83,7 +85,7 @@ export default function ViewMore() {
     <>
       <Nav />
       <div className="viewmore">
-        <div className="viewmore-first">
+        <div className="viewmore-first visible">
           <div className="viewmore-first-img">
             <img src={image} alt={place.name} />
           </div>
@@ -98,7 +100,7 @@ export default function ViewMore() {
           </div>
         </div>
         <div className="viewmore-second">
-          <div className="viewmore-second-left">
+          <div className="viewmore-second-left visible">
             <h2>Description</h2>
             <p className="viewmore-second-desc">
               {place.description}
@@ -109,7 +111,7 @@ export default function ViewMore() {
               {place.description3}
             </p>
           </div>
-          <div className="viewmore-second-right">
+          <div className="viewmore-second-right visible">
             <div>
               <img src={require('../imgs/khan-el-khalili1.jpg')} alt="Khan El Khalili" />
             </div>
@@ -120,7 +122,7 @@ export default function ViewMore() {
             </div>
           </div>
         </div>
-        <div className="viewmore-third">
+        <div className="viewmore-third visible">
           <h3> Price : {place.price}</h3>
           <span>
             <button className="button-28" role="button" onClick={handleAddToTrip}>Add</button>
@@ -128,12 +130,12 @@ export default function ViewMore() {
           </span>
         </div>
         {showTours && (
-          <div className="tour-guide-list">
+          <div className={`tour-guide-list ${isVisible ? 'scale-in' : ''}`}>
             <h3>Select a Tour Guide</h3>
             <div className="filtertour-body">
               {tours.length > 0 ? (
                 tours.map((tour) => (
-                  <>
+                  <React.Fragment key={tour._id}>
                     <hr />
                     <div className="filtertour-element">
                       <div>
@@ -149,7 +151,7 @@ export default function ViewMore() {
                         <button>Book</button>
                       </div>
                     </div>
-                  </>
+                  </React.Fragment>
                 ))
               ) : (
                 <p>No tours available</p>
@@ -162,4 +164,3 @@ export default function ViewMore() {
     </>
   );
 }
-

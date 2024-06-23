@@ -73,6 +73,53 @@
 	}
 }
 
+@keyframes slideInUp {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes scaleIn {
+	from {
+		opacity: 0;
+		transform: scale(0.8);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+.scale-in {
+	animation: scaleIn 0.3s ease-out forwards;
+}
+
+.fade-in {
+	animation: fadeIn 1.5s ease-in forwards;
+}
+
+.slide-in-up {
+	animation: slideInUp 1.5s ease-out forwards;
+}
+
 .bounceInLeft {
 	animation: bounceInLeft 1.5s ease-in 0s 1 normal none;
 }
@@ -148,6 +195,36 @@ htmml {
 }
 
 /*cardplace*/
+
+.card-rec-hist img {
+	transition: transform 0.3s ease-in-out;
+}
+
+.card-rec-hist img:hover {
+	transform: scale(1.05);
+}
+
+/* Initial State for Card */
+.card-rec-hist {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 1s ease-in, transform 1s ease-in;
+}
+
+.card-rec-hist.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Styling for Favorite Icon */
+.card-buttons .fa-heart {
+	transition: color 0.3s ease-in-out;
+}
+
+.card-buttons .fa-heart.favorite {
+	color: red;
+}
+
 .card-rec-hist {
 	display: grid;
 	grid-template-columns: 1fr 7fr 1fr;
@@ -216,8 +293,8 @@ htmml {
 	width: auto;
 	/* Change to auto to accommodate the dynamic width */
 	text-align: center;
+	transition: all 0.3s ease-in-out;
 }
-
 .menu-button {
 	background-color: black;
 	color: white;
@@ -510,6 +587,49 @@ htmml {
 }
 
 /*------------------------------------Home---------------------------------------------------*/
+.whole-home {
+	animation: fadeIn 2s ease-in forwards;
+}
+
+.why-choose-home,
+.home-dest,
+.dest-itemL,
+.dest-itemR,
+.sep-reason,
+.double-reasons,
+.third-reason {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 1s ease-in, transform 1s ease-in;
+}
+
+.why-choose-home.visible,
+.home-dest.visible,
+.dest-itemL.visible,
+.dest-itemR.visible,
+.sep-reason.visible,
+.double-reasons.visible,
+.third-reason.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.dest-itemL img,
+.dest-itemR img,
+.sep-reason img,
+.double-reasons img,
+.third-reason img {
+	transition: transform 0.3s ease-in-out;
+}
+
+.dest-itemL img:hover,
+.dest-itemR img:hover,
+.sep-reason img:hover,
+.double-reasons img:hover,
+.third-reason img:hover {
+	transform: scale(1.01);
+}
+
 .why-choose-home {
 	display: flex;
 	flex-direction: column;
@@ -769,6 +889,28 @@ htmml {
 }
 
 /*----------------------allplaces-------------------------------------------------*/
+
+/* Specific Animations for Place Cards */
+.places-whole .filter-options,
+.places-whole .card-rec-hist {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 1s ease-in, transform 1s ease-in;
+}
+
+.places-whole .filter-options.visible,
+.places-whole .card-rec-hist.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+.card-rec-hist img {
+	transition: transform 0.3s ease-in-out;
+}
+
+.card-rec-hist img:hover {
+	transform: scale(1.05);
+}
 
 .select-dropdown {
 	padding: 10px;
@@ -1396,7 +1538,11 @@ htmml {
 	min-height: 100vh;
 	margin: 30px auto;
 }
-.profile-title{text-align: left;}
+
+.profile-title {
+	text-align: left;
+}
+
 /* Profile Part */
 .profile-part {
 	display: flex;
@@ -1429,12 +1575,14 @@ htmml {
 }
 
 .profile-email h2,
-.profile-pass h2 ,.change-main p{
+.profile-pass h2,
+.change-main p {
 	font-size: 15px;
 	color: black;
 }
 
-.pass-email,.pass-p {
+.pass-email,
+.pass-p {
 	margin: 5px auto;
 	font-size: 18px;
 	color: #777;
@@ -1459,9 +1607,11 @@ htmml {
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
-.changepass:hover{
+
+.changepass:hover {
 	color: black;
 }
+
 /* Profile Picture */
 .profile-picture {
 	width: 120px;
@@ -1511,15 +1661,18 @@ htmml {
 	align-items: center;
 	column-gap: 5px;
 }
-.favorite-item div{
+
+.favorite-item div {
 	display: flex;
 	flex-direction: row;
 	column-gap: 5px;
 }
-.favorites-list img{
+
+.favorites-list img {
 	width: 80px;
 	border-radius: 4px;
 }
+
 .favorite-item h4 {
 	margin: 0 0 5px;
 	font-size: 20px;
@@ -1531,6 +1684,7 @@ htmml {
 	font-size: 16px;
 	color: #666;
 }
+
 /*---------------change component------------*/
 .change-main {
 	height: fit-content;
@@ -1551,12 +1705,13 @@ htmml {
 	background-color: white;
 	padding: 10px 0px;
 	min-width: 220px;
-	max-width:550px ;
+	max-width: 550px;
 	color: #777;
 	text-align: center;
 }
 
-.change-main button ,.favourite-remove{
+.change-main button,
+.favourite-remove {
 	margin-top: 10px;
 	background-color: black;
 	color: gray;
@@ -1566,7 +1721,9 @@ htmml {
 	transition: all 0.2s ease-in-out;
 	cursor: pointer;
 }
-.change-main button:hover,.favourite-remove:hover{
+
+.change-main button:hover,
+.favourite-remove:hover {
 	background-color: white;
 	border: 1px solid black;
 	color: black;
@@ -1587,6 +1744,104 @@ htmml {
 }
 
 /*---------viewmore---------*/
+
+.viewmore img {
+	transition: transform 0.3s ease-in-out;
+}
+
+.viewmore img:hover {
+	transform: scale(1.05);
+}
+
+/* Initial State for ViewMore Sections */
+.viewmore-first,
+.viewmore-second-left,
+.viewmore-second-right,
+.viewmore-third {
+	opacity: 0;
+	transform: translateY(20px);
+	transition: opacity 1s ease-in, transform 1s ease-in;
+}
+
+.viewmore-first.visible,
+.viewmore-second-left.visible,
+.viewmore-second-right.visible,
+.viewmore-third.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* Gallery Styling */
+.viewmore-second-right {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.viewmore-second-right div {
+	position: relative;
+}
+
+.viewmore-second-right img {
+	width: 100%;
+	height: auto;
+	cursor: pointer;
+}
+
+.viewmore-second-right .active {
+	border: 2px solid #007bff;
+}
+
+/* Tour Guide List */
+.tour-guide-list {
+	margin-top: 20px;
+}
+
+.tour-guide-list h3 {
+	margin-bottom: 20px;
+}
+
+.tour-guide-list {
+	opacity: 0;
+	transform: scale(0.8);
+	transition: opacity 0.3s ease-out, transform 0.3s ease-out;
+}
+
+
+
+.tour-guide-list.visible {
+	opacity: 1;
+	transform: scale(1);
+}	
+
+.filtertour-element {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 0;
+}
+
+.filtertour-element h4 {
+	margin: 0;
+}
+
+.filtertour-element p {
+	margin: 5px 0;
+}
+
+.filtertour-element .requests-button button {
+	padding: 5px 10px;
+	background-color: #007bff;
+	color: #fff;
+	border: none;
+	cursor: pointer;
+}
+
+.filtertour-element .requests-button button:hover {
+	background-color: #0056b3;
+}
+
+
 .viewmore {
 	display: flex;
 	flex-direction: column;
