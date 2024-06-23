@@ -26,12 +26,8 @@ export default function Profile() {
             Authorization: `Bearer ${token}`,
           },
         }
-<<<<<<< HEAD
       );
-=======
-      });
-      console.log(response.data.data)
->>>>>>> c5a00ae0e7491d381eb0aaa77e9b35efc4f67e48
+      console.log(response.data.data);
       return response.data.data.favorites;
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -58,19 +54,18 @@ export default function Profile() {
     try {
       if (userData && userData.token) {
         const token = userData.token;
-<<<<<<< HEAD
-        await axios.delete("http://localhost:3000/api/v1/users/favorites", {
-=======
         console.log("User token:", token);
-        const response = await axios.delete('http://localhost:3000/api/v1/users/favorites', {
->>>>>>> c5a00ae0e7491d381eb0aaa77e9b35efc4f67e48
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          data: {
-            placeId: placeId,
-          },
-        });
+        const response = await axios.delete(
+          "http://localhost:3000/api/v1/users/favorites",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            data: {
+              placeId: placeId,
+            },
+          }
+        );
         console.log("Remove favorite response:", response);
         setFavorites(favorites.filter((place) => place._id !== placeId));
         console.log("Updated favorites list:", favorites);
@@ -93,7 +88,6 @@ export default function Profile() {
       </>
     );
   }
-
   return (
     <>
       <Nav />
@@ -101,11 +95,9 @@ export default function Profile() {
         <div className="profile-part">
           <h2 className="profile-title">My Profile</h2>
           <div className="profile-picture">
-            {userData.data.user ? (
+            {userData.data.user && userData.data.user.photo ? (
               <img
-                src={require(`../imgs/${
-                  userData.data.user.photo || "default.jpg"
-                }`)}
+                src={require(`../imgs/${userData.data.user.photo}`)}
                 alt="Profile"
               />
             ) : (
@@ -124,7 +116,7 @@ export default function Profile() {
             <p className="changepass" onClick={() => setEdit(!edit)}>
               Change Password?
             </p>
-            {edit && <ChangePassword email={email} />}
+            {edit && <ChangePassword />}
           </span>
         </div>
 
@@ -135,14 +127,16 @@ export default function Profile() {
               {favorites.map((place) => (
                 <li key={place._id} className="favorite-item">
                   <div>
-<<<<<<< HEAD
-=======
                     {place.img ? (
-                      <img src={require(`../imgs/${place.img}`)} alt={place.name} />
+                      <img
+                        src={require(`../imgs/${place.img}`)}
+                        alt={place.name}
+                      />
                     ) : (
-                      <div className="no-image-placeholder">No Image Available</div>
+                      <div className="no-image-placeholder">
+                        No Image Available
+                      </div>
                     )}
->>>>>>> c5a00ae0e7491d381eb0aaa77e9b35efc4f67e48
                     <span>
                       <h4>{place.name}</h4>
                       <p>{place.location}</p>
@@ -162,7 +156,7 @@ export default function Profile() {
           )}
         </div>
       </div>
-      <Footer name='footer-main' />
+      <Footer name="footer-main" />
     </>
   );
 }
