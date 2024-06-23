@@ -42,6 +42,7 @@ export default function CardPlace({ place }) {
       if (response.data.status === 'success') {
         setIsFavorite(true); // Update the favorite status
         console.log('Place added to favorites');
+        console.log("place:",response)
       }
     } catch (error) {
       console.error('Error adding place to favorites:', error);

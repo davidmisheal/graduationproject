@@ -24,6 +24,7 @@ export default function Profile() {
           Authorization: `Bearer ${token}`
         }
       });
+      console.log(response.data.data)
       return response.data.data.favorites;
     } catch (error) {
       console.error('Error fetching favorites:', error);
@@ -113,7 +114,11 @@ export default function Profile() {
               {favorites.map((place) => (
                 <li key={place._id} className="favorite-item">
                   <div>
-                    <img src={require(`../imgs/${place.img}`)} alt={place.name} />
+                    {place.img ? (
+                      <img src={require(`../imgs/${place.img}`)} alt={place.name} />
+                    ) : (
+                      <div className="no-image-placeholder">No Image Available</div>
+                    )}
                     <span>
                       <h4>{place.name}</h4>
                       <p>{place.location}</p>

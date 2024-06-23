@@ -4,14 +4,27 @@ const AppError = require('./../utils/appError');
 const factory = require('./handlerFactory');
 const multer = require('multer');
 const sharp = require('sharp');
-const Place =require('./../models/placeModel')
+const Place = require('./../models/placeModel');
 
 exports.getUserFavorites = catchAsync(async (req, res, next) => {
-  const userId = req.user.id;
-  const user = await User.findById(userId).populate('favorites');
+  const userId = req.user.id; // Ensure req.user is properly populated by previous middleware
+  console.log('Fetching favorites for user:', userId);
+
+  const user = await User.findById(userId).populate({
+    path: 'favorites',
+    select: 'name location img' // Adjust according to your Place model's attributes
+  });
+
   if (!user) {
     return next(new AppError('User not found.', 404));
   }
+
+  if (!user.favorites || user.favorites.length === 0) {
+    console.log('No favorites found for this user.');
+  } else {
+    console.log('Found favorites:', user.favorites);
+  }
+
   res.status(200).json({
     status: 'success',
     data: {
@@ -19,7 +32,6 @@ exports.getUserFavorites = catchAsync(async (req, res, next) => {
     }
   });
 });
-
 // Add a place to user's favorites
 exports.addUserFavorite = catchAsync(async (req, res, next) => {
   const userId = req.user.id;
@@ -94,9 +106,9 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
     .jpeg({ quality: 90 })
     .toFile(`public/img/users/${req.file.filename}`);
 
+  req.body.photo = req.file.filename;
   next();
 });
-
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
   Object.keys(obj).forEach(el => {
@@ -150,7 +162,7 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   }
 
   // 2) Filtered out unwanted fields names that are not allowed to be updated
-  const filteredBody = filterObj(req.body, 'name', 'email');
+  const filteredBody = filterObj(req.body, 'name', 'email', 'photo');
 
   // 3) Update user document
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
