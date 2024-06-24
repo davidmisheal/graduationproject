@@ -133,15 +133,8 @@ export default function Profile() {
                   <div>
                     {place.img ? (
                       <img
-                        src={`http://localhost:3000/img/users/${
-                          place.img || "default.jpg"
-                        }`}
+                        src={require(`../imgs/${place.img}`)}
                         alt={place.name}
-                        onError={(e) => {
-                          e.target.onerror = null;
-                          e.target.src =
-                            "http://localhost:3000/img/users/default.jpg";
-                        }}
                       />
                     ) : (
                       <div className="no-image-placeholder">

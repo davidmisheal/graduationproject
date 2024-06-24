@@ -157,7 +157,7 @@ export default function SignLogin() {
         email: "",
         password: "",
         price: "",
-        location: "",
+        location: ""
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -205,7 +205,7 @@ export default function SignLogin() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    if (userState == "user") {
+    if (userState === "user") {
       const { email, password } = formData;
       const newErrors = { email: "", password: "" };
 
@@ -235,7 +235,7 @@ export default function SignLogin() {
           formError: error.response.data.message || "An error occurred",
         }));
       }
-    } else if (userState == "tourguide") {
+    } else if (userState === "tourguide") {
       const { email, password } = formData;
       const newErrors = { email: "", password: "" };
 
@@ -257,8 +257,6 @@ export default function SignLogin() {
         console.log("Login successful!", response.data);
         window.localStorage.setItem("isLoggedIn", true);
         window.localStorage.setItem("userData", JSON.stringify(response.data));
-        const { token } = response.data;
-        localStorage.setItem("token", token);
         navigate("/");
       } catch (error) {
         console.error("Login failed!", error);
@@ -276,13 +274,13 @@ export default function SignLogin() {
       <div className="signin-main">
         <span className="signin-options">
           <i
-            className="fa-solid fa-user-tie fa-xl"
+            className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""}`}
             onClick={() => {
               handleOptionsSignIn("tourguide");
             }}
           ></i>
           <i
-            className="fa-solid fa-user fa-xl"
+            className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""}`}
             onClick={() => {
               handleOptionsSignIn("user");
             }}
@@ -366,10 +364,11 @@ export default function SignLogin() {
         </div>
         {signUpState ? (
           <>
-            <div className="signup-popup">
+            <div className="signup-popup show">
               <span className="signup-exit">
                 <i
-                  className="fa-solid fa-x"
+                  className={`fa-solid fa-x`}
+
                   onClick={() => {
                     setSignUpState(false);
                   }}
@@ -377,13 +376,13 @@ export default function SignLogin() {
               </span>
               <span className="signup-options">
                 <i
-                  className="fa-solid fa-user-tie fa-xl"
+                  className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""}`}
                   onClick={() => {
                     handleOptionsSignUp("tourguide");
                   }}
                 ></i>
                 <i
-                  className="fa-solid fa-user fa-xl"
+                  className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""}`}
                   onClick={() => {
                     handleOptionsSignUp("user");
                   }}
