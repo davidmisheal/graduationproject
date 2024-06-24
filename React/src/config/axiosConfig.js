@@ -1,21 +1,22 @@
 import axios from "axios";
 
-axios.defaults.withCredentials = true;
+const API = axios.create({
+  baseURL: "http://localhost:3000/api/v1",
+});
 
-axios.interceptors.request.use(
-  (config) => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("jwt="))
-      ?.split("=")[1];
+// Function to initialize headers
+const setAuthToken = (token) => {
+  if (token) {
+    // Apply for every request
+    API.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    // Delete auth header
+    delete API.defaults.headers.common["Authorization"];
+  }
+};
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+// Initialize with token if already logged in
+const token = localStorage.getItem("token");
+setAuthToken(token);
 
-    return config;
-  },
-  (error) => Promise.reject(error)
-);
-
-export default axios;
+export default API;

@@ -42,12 +42,12 @@ export default function Profile() {
       } else if (userData.data.tour) {
         setEmail(userData.data.tour.email);
       }
-
       if (userData.token) {
         fetchFavorites(userData.token).then((favs) => setFavorites(favs));
       }
     }
-  }, [userData, fetchFavorites]);
+    console.log("Email set in Profile:", email);
+  }, [userData, fetchFavorites, email]);
 
   const handleRemoveFavorite = async (placeId) => {
     console.log("Attempting to remove favorite:", placeId);
@@ -97,8 +97,12 @@ export default function Profile() {
           <div className="profile-picture">
             {userData.data.user && userData.data.user.photo ? (
               <img
-                src={require(`../imgs/${userData.data.user.photo}`)}
+                src={`http://localhost:3000/img/users/${userData.data.user.photo}`}
                 alt="Profile"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = "http://localhost:3000/img/users/default.jpg";
+                }}
               />
             ) : (
               <i className="fa-solid fa-user fa-2xl"></i>
@@ -116,7 +120,7 @@ export default function Profile() {
             <p className="changepass" onClick={() => setEdit(!edit)}>
               Change Password?
             </p>
-            {edit && <ChangePassword />}
+            {edit && <ChangePassword email={email} />}
           </span>
         </div>
 
@@ -129,8 +133,15 @@ export default function Profile() {
                   <div>
                     {place.img ? (
                       <img
-                        src={require(`../imgs/${place.img}`)}
+                        src={`http://localhost:3000/img/users/${
+                          place.img || "default.jpg"
+                        }`}
                         alt={place.name}
+                        onError={(e) => {
+                          e.target.onerror = null;
+                          e.target.src =
+                            "http://localhost:3000/img/users/default.jpg";
+                        }}
                       />
                     ) : (
                       <div className="no-image-placeholder">

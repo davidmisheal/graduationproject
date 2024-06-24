@@ -150,14 +150,14 @@ export default function SignLogin() {
         }));
       }
     } else if (userState === "tourguide") {
-      const { name, email, password,location, price, role } = formData;
+      const { name, email, password, location, price, role } = formData;
       let isValid = true;
       const newErrors = {
         name: "",
         email: "",
         password: "",
         price: "",
-        location:""
+        location: "",
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -181,7 +181,7 @@ export default function SignLogin() {
       try {
         const response = await axios.post(
           "http://localhost:3000/api/v1/tours/signup",
-          { name, email, password,location, price, role }
+          { name, email, password, location, price, role }
         );
         setTour(response.data);
         console.log("Sign-up successful!", response.data);
@@ -257,6 +257,8 @@ export default function SignLogin() {
         console.log("Login successful!", response.data);
         window.localStorage.setItem("isLoggedIn", true);
         window.localStorage.setItem("userData", JSON.stringify(response.data));
+        const { token } = response.data;
+        localStorage.setItem("token", token);
         navigate("/");
       } catch (error) {
         console.error("Login failed!", error);

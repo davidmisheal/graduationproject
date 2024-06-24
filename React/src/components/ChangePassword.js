@@ -6,7 +6,11 @@ export default function ChangePassword({ email }) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const { user } = useUser(); // Assuming `user` includes the user's token
+  const { user } = useUser();
+
+  useEffect(() => {
+    console.log("User in ChangePassword:", user);
+  }, [user]);
 
   const handleChangePassword = async () => {
     if (!user || !user.token) {
@@ -42,22 +46,25 @@ export default function ChangePassword({ email }) {
   };
 
   const handleForgotPassword = async () => {
+    if (!email) {
+      alert("User email is not available");
+      return;
+    }
+
     try {
-      if (!email) {
-        alert("User email is not available");
-        return;
-      }
-
       await axios.post("http://localhost:3000/api/v1/users/forgotPassword", {
-        email: email,
+        email,
       });
-
-      alert("Password reset email sent! Check MailTrap");
+      alert("Password reset email sent!");
     } catch (error) {
       console.error("Error sending password reset email:", error);
       alert("Failed to send password reset email.");
     }
   };
+  useEffect(() => {
+    console.log("Email in ChangePassword:", email);
+    console.log("User in ChangePassword:", user);
+  }, [user, email]);
 
   return (
     <div className="change-main">
