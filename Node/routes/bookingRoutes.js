@@ -1,8 +1,28 @@
-const express = require("express");
-const router = express.Router();
-const bookingController = require("../controllers/bookingController");
+const express = require('express');
+const bookingController = require('./../controllers/bookingController');
+const authController = require('./../controllers/authController');
 
-router.post("/", bookingController.createBooking);
-router.get("/:tourId", bookingController.getBookingsByTourId);
+const router = express.Router();
+
+router.use(authController.protect);
+
+router
+  .route('/')
+  .get(bookingController.getAllBookings)
+  .post(bookingController.createBooking);
+
+router.route('/:bookingId').get(bookingController.getBookingDetails);
+
+router
+  .route('/:id')
+  .get(bookingController.getBooking)
+  .patch(bookingController.updateBooking)
+  .delete(bookingController.deleteBooking);
+
+router.get(
+  '/guide-bookings/:bookingId',
+  authController.protect,
+  bookingController.getGuideBookingDetails
+);
 
 module.exports = router;

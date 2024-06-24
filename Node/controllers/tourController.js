@@ -125,6 +125,7 @@ exports.loginTour = catchAsync(async (req, res, next) => {
   }
 
   const passwordMatch = await bcrypt.compare(password, tour.password);
+
   if (!passwordMatch) {
     return next(new AppError('Incorrect email or password', 401));
   }

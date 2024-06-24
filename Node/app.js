@@ -74,7 +74,7 @@ app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/place', placeRouter);
-app.use('/api/v1/booking', bookingRouter);
+app.use('/api/v1/bookings', bookingRouter);
 app.use('/images', express.static('public/img/tours'));
 app.use('/images', express.static('public/img/users'));
 app.use(
