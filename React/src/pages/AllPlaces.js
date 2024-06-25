@@ -7,16 +7,27 @@ import { Scroll } from "../func/Scroll";
 import ScreenSize from "../func/ScreenSize";
 import FloatNav from '../components/Float-nav';
 import CategoryPart from "../components/Category_part";
+import { useLocation } from "react-router-dom";
 
 export default function All() {
     const isMobile = ScreenSize();
     const isScrolled = Scroll(250);
 
     // State variables for filtering and data
-    const [filterCriteria, setFilterCriteria] = useState('');
+    const [filterCriteria, setFilterCriteria] = useState([]);
     const [places, setPlaces] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
+    const location = useLocation();
 
+    // Extract query parameter and initialize filter criteria
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        const locationFilter = params.get('location');
+        if (locationFilter) {
+            setFilterCriteria(locationFilter.split(','));
+        }
+        console.log(filterCriteria.length)
+    }, [location]);
     // Fetch places from API
     useEffect(() => {
         const fetchPlaces = async () => {
@@ -31,19 +42,29 @@ export default function All() {
         };
 
         fetchPlaces();
-    },[]);
+    }, []);
 
     // Filter function
     useEffect(() => {
-        if (filterCriteria) {
+        if (filterCriteria.length > 0) {
             const filtered = places.filter(item =>
-                item.tourism.toLowerCase().includes(filterCriteria.toLowerCase())
+                filterCriteria.some(criteria => item.location.toLowerCase().includes(criteria.toLowerCase()) || item.tourism.toLowerCase().includes(criteria.toLowerCase()))
             );
             setFilteredData(filtered);
         } else {
             setFilteredData(places); // Show all places if no filter is applied
         }
     }, [filterCriteria, places]);
+
+    // Handle dropdown change
+    const handleDropdownChange = (e) => {
+        const selectedCriteria = e.target.value;
+        if (selectedCriteria) {
+            setFilterCriteria([selectedCriteria]);
+        } else {
+            setFilterCriteria([]); // Clear filter if 'All' is selected
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -75,8 +96,8 @@ export default function All() {
                 <div className="filter-options">
                     <select
                         className="select-dropdown"
-                        value={filterCriteria}
-                        onChange={e => setFilterCriteria(e.target.value)}
+                        value={filterCriteria[0] || ''}
+                        onChange={handleDropdownChange}
                     >
                         <option value="">All</option>
                         <option value="Adventure">Adventure Tourism</option>

@@ -103,7 +103,7 @@ export default function Profile() {
                   e.target.onerror = null;
                   e.target.src = "http://localhost:3000/img/users/default.jpg";
                 }}
-              />
+              />  
             ) : (
               <i className="fa-solid fa-user fa-2xl"></i>
             )}

@@ -1,5 +1,21 @@
 const Place = require('../models/placeModel');
 
+const catchAsync = require('../utils/catchAsync');
+const AppError = require('../utils/appError');
+
+exports.getPlaceById = catchAsync(async (req, res, next) => {
+  const place = await Place.findById(req.params.id);
+
+  if (!place) {
+    return next(new AppError('No place found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: place
+  });
+});
+
 exports.getFavoriteCount = async (req, res) => {
   try {
     const place = await Place.findById(req.params.id).select('favoriteCount'); // Only fetch the favoriteCount
@@ -72,18 +88,6 @@ exports.getAllPlaces = async (req, res) => {
     res.send(places);
   } catch (error) {
     console.error('Error fetching places:', error);
-    res.status(500).send(error);
-  }
-};
-
-exports.getPlaceById = async (req, res) => {
-  try {
-    const place = await Place.findById(req.params.id);
-    if (!place) {
-      return res.status(404).send({ error: 'Place not found' });
-    }
-    res.send(place);
-  } catch (error) {
     res.status(500).send(error);
   }
 };

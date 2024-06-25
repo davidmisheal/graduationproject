@@ -7,6 +7,7 @@ import CategoryPart from "../components/Category_part";
 import '../style/mobile.css'
 import ScreenSize from "../func/ScreenSize";
 import ReasonHome from "../components/ReasonHome";
+import { Link } from "react-router-dom";
 
 export default function Home() {
 	const isScrolled = Scroll(150)
@@ -75,28 +76,36 @@ export default function Home() {
 					</span>
 					<div className="dest-items">
 						<div className='dest-itemL fade-in'>
-							<img src={require("../imgs/cairo.jpg")} alt="Cairo" />
-							<span className="dest-writings">
-								<h4>Cairo</h4>
-							</span>
+							<Link to="/allplaces?location=Cairo">
+								<img src={require("../imgs/cairo.jpg")} alt="Cairo" />
+								<span className="dest-writings">
+									<h4>Cairo</h4>
+								</span>
+							</Link>
 						</div>
 						<div className='dest-itemR fade-in'>
-							<img src={require("../imgs/luxor.jpg")} alt="Luxor" />
-							<span className="dest-writings">
-								<h4>Luxor</h4>
-							</span>
+							<Link to='/allplaces?location=luxor'>
+								<img src={require("../imgs/luxor.jpg")} alt="Luxor" />
+								<span className="dest-writings">
+									<h4>Luxor</h4>
+								</span>
+							</Link>
 						</div>
 						<div className='dest-itemR fade-in'>
-							<img src={require("../imgs/aswan.jpg")} alt="Aswan" />
-							<span className="dest-writings">
-								<h4>Aswan</h4>
-							</span>
+							<Link to='/allplaces?location=aswan'>
+								<img src={require("../imgs/aswan.jpg")} alt="Aswan" />
+								<span className="dest-writings">
+									<h4>Aswan</h4>
+								</span>
+							</Link>
 						</div>
 						<div className='dest-itemL fade-in'>
-							<img src={require("../imgs/red sea.jpg")} alt="Red Sea" />
-							<span className="dest-writings">
-								<h4>Red Sea</h4>
-							</span>
+							<Link to='/allplaces?location=hurghada,dahab,sharm elsheikh'>
+								<img src={require("../imgs/red sea.jpg")} alt="Red Sea" />
+								<span className="dest-writings">
+									<h4>Red Sea</h4>
+								</span>
+							</Link>
 						</div>
 					</div>
 				</div>
