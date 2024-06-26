@@ -41,70 +41,51 @@ exports.createBooking = catchAsync(async (req, res, next) => {
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);
 exports.updateBooking = factory.updateOne(Booking);
-exports.deleteBooking = factory.deleteOne(Booking);
 
-exports.getBookingDetails = catchAsync(async (req, res, next) => {
-  const userId = req.user._id; // Assuming the user ID is stored in req.user after authentication
-
-  const booking = await Booking.findById(req.params.bookingId)
-    .populate({
-      path: 'tour',
-      select: 'name'
-    })
-    .populate({
-      path: 'user',
-      select: 'name'
-    })
-    .populate({
-      path: 'places',
-      select: 'name description'
-    });
+exports.deleteBooking = catchAsync(async (req, res, next) => {
+  const booking = await Booking.findById(req.params.bookingId);
 
   if (!booking) {
-    return next(new AppError('No booking found with that ID', 404));
+    return next(new AppError('No document found with that ID', 404));
   }
 
-  // Check the role of the logged-in user and tailor the response accordingly
-  if (req.user.role === 'user') {
-    res.status(200).json({
-      status: 'success',
-      data: {
-        booking: {
-          tourName: booking.tour.name,
-          places: booking.places,
-          price: booking.price,
-          date: booking.date,
-          status: booking.status
-        }
-      }
-    });
-  } else {
-    res.status(403).json({
-      status: 'fail',
-      message: 'You do not have permission to view this data'
-    });
-  }
-});
+  await Booking.deleteOne({ _id: req.params.bookingId });
 
-exports.getGuideBookingDetails = catchAsync(async (req, res, next) => {
-  const booking = await Booking.findById(req.params.bookingId).populate({
-    path: 'tour',
-    match: { guides: req.user._id } // Ensures the tour includes this guide
+  res.status(204).json({
+    status: 'success',
+    data: null
   });
-
-  if (!booking || !booking.tour) {
-    return next(
-      new AppError(
-        'No booking found or you are not authorized to view this booking',
-        404
-      )
-    );
+});
+// Fetch all bookings for a specific user
+exports.getBookingsByUser = catchAsync(async (req, res, next) => {
+  const bookings = await Booking.find({ user: req.params.userId }).populate(
+    'tour places'
+  );
+  if (!bookings) {
+    return next(new AppError('No bookings found for this user', 404));
   }
-
   res.status(200).json({
     status: 'success',
+    results: bookings.length,
     data: {
-      booking
+      bookings
+    }
+  });
+});
+
+// Fetch all bookings for a specific tour
+exports.getBookingsByTour = catchAsync(async (req, res, next) => {
+  const bookings = await Booking.find({ tour: req.params.tourId }).populate(
+    'user places'
+  );
+  if (!bookings) {
+    return next(new AppError('No bookings found for this tour', 404));
+  }
+  res.status(200).json({
+    status: 'success',
+    results: bookings.length,
+    data: {
+      bookings
     }
   });
 });

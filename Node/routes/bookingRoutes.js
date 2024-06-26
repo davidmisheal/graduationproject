@@ -11,18 +11,12 @@ router
   .get(bookingController.getAllBookings)
   .post(bookingController.createBooking);
 
-router.route('/:bookingId').get(bookingController.getBookingDetails);
-
 router
-  .route('/:id')
-  .get(bookingController.getBooking)
+  .route('/:bookingId')
   .patch(bookingController.updateBooking)
   .delete(bookingController.deleteBooking);
 
-router.get(
-  '/guide-bookings/:bookingId',
-  authController.protect,
-  bookingController.getGuideBookingDetails
-);
+router.get('/user/:userId', bookingController.getBookingsByUser);
+router.get('/tour/:tourId', bookingController.getBookingsByTour);
 
 module.exports = router;

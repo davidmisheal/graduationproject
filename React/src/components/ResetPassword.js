@@ -25,7 +25,7 @@ const ResetPassword = () => {
         }
       );
       alert("Password successfully reset!");
-      navigate("/");
+      navigate("/login"); // Navigate to login after success
     } catch (error) {
       console.error("Error resetting password:", error);
       alert("Failed to reset password.");
