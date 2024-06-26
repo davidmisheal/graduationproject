@@ -1001,7 +1001,8 @@ htmml {
 }
 
 .signin-body form,
-.signup-popup form {
+.signup-popup form,
+.password-popup form {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
@@ -1015,7 +1016,8 @@ htmml {
 }
 
 .signin-body input,
-.signup-popup input {
+.signup-popup input,
+.password-popup input {
 	background-color: rgb(0, 0, 0, 0.1);
 	color: white;
 	border: 1px solid rgb(63, 63, 63);
@@ -1030,12 +1032,14 @@ htmml {
 }
 
 .signin-body input:hover,
-.signup-popup input:hover {
+.signup-popup input:hover,
+.password-popup input:hover {
 	border: white solid 1px;
 }
 
 .signin-body a,
-.signup-popup a {
+.signup-popup a,
+.password-popup a {
 	color: gray;
 	font-size: 12px;
 	transition: all 0.2s ease-in-out;
@@ -1044,13 +1048,15 @@ htmml {
 }
 
 .signin-body a:hover,
-.signup-popup a:hover {
+.signup-popup a:hover,
+.password-popup a:hover {
 	text-decoration: underline;
 	color: white;
 }
 
 .signin-body button,
-.signup-popup button {
+.signup-popup button,
+.password-popup button {
 	border-radius: 20px;
 	padding: 15px 25px;
 	width: 314px;
@@ -1065,11 +1071,13 @@ htmml {
 }
 
 .signin-body button:hover,
-.signup-popup button:hover {
+.signup-popup button:hover,
+.password-popup button:hover {
 	background-color: black;
 	color: white;
 	border: 1px solid white;
 }
+
 
 .signin-other {
 	display: flex;
@@ -1079,7 +1087,7 @@ htmml {
 	width: 100%;
 }
 
-.signup-overlay {
+.signup-overlay,.password-overlay {
 	opacity: 0.8;
 	background-color: black;
 	width: 100%;
@@ -1089,7 +1097,7 @@ htmml {
 	top: 0;
 }
 
-.signup-popup {
+.signup-popup,.password-popup {
 	background-image: url('../src/imgs/signin-back.jpg');
 	background-repeat: no-repeat;
 	background-size: 1200px;
@@ -1110,7 +1118,16 @@ htmml {
 	transform: scale(0.9);
 	transition: opacity 0.3s ease, transform 0.3s ease;
 }
+.password-popup{
+width:25%;
+}
+.password-popup input{
+	width:16vw;
+}
+.password-popup button{
+	width:16vw;
 
+}
 /* Add this CSS to your styles */
 .icon {
 	color: gray;
@@ -1128,24 +1145,28 @@ htmml {
 	animation: popupFadeIn 0.3s forwards;
 }
 
-.signup-popup:hover {
+.signup-popup:hover,
+.password-popup:hover {
 	border: white 1px solid;
 }
 
-.signup-exit {
+.signup-exit,
+.password-exit {
 	position: relative;
 	right: -47%;
 	top: 20px;
 }
 
-.signup-exit i {
+.signup-exit i,
+.password-exit i {
 	position: relative;
 	color: gray;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
 
-.signup-exit i:hover {
+.signup-exit i:hover,
+.password-exit i:hover {
 	color: white;
 }
 

@@ -93,7 +93,6 @@ export default function ChangePassword({ email }) {
         />
       </label>
       <button onClick={handleChangePassword}>Change Password</button>
-      <button onClick={handleForgotPassword}>Forgot Password?</button>
     </div>
   );
 }

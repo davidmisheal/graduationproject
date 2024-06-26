@@ -6,6 +6,8 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { useTour } from "../context/TourContext";
+import ForgotPassword from "../components/ForgotPassword";
+import ResetPassword from "../components/ResetPassword";
 
 export default function SignLogin() {
   const [showUserIn, setShowUserIn] = useState(true);
@@ -14,6 +16,8 @@ export default function SignLogin() {
   const [showTourGuideUp, setShowTourGuideUp] = useState(false);
   const [userState, setUserState] = useState("user");
   const [signUpState, setSignUpState] = useState(false);
+  const [passwordState, setPasswordState] = useState(false);
+  const [resetMailState, setResetMailState] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -157,7 +161,7 @@ export default function SignLogin() {
         email: "",
         password: "",
         price: "",
-        location: ""
+        location: "",
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -274,13 +278,17 @@ export default function SignLogin() {
       <div className="signin-main">
         <span className="signin-options">
           <i
-            className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""}`}
+            className={`fa-solid fa-user-tie fa-xl icon ${
+              userState === "tourguide" ? "active" : ""
+            }`}
             onClick={() => {
               handleOptionsSignIn("tourguide");
             }}
           ></i>
           <i
-            className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""}`}
+            className={`fa-solid fa-user fa-xl icon ${
+              userState === "user" ? "active" : ""
+            }`}
             onClick={() => {
               handleOptionsSignIn("user");
             }}
@@ -313,7 +321,13 @@ export default function SignLogin() {
               )}
               <button type="submit">Sign In</button>
               <span className="signin-other">
-                <a href="#">Forgot your password?</a>
+                <Link
+                  onClick={() => {
+                    setPasswordState(!passwordState);
+                  }}
+                >
+                  Forgot your password?
+                </Link>
                 <Link
                   onClick={() => {
                     setSignUpState(!signUpState);
@@ -368,7 +382,6 @@ export default function SignLogin() {
               <span className="signup-exit">
                 <i
                   className={`fa-solid fa-x`}
-
                   onClick={() => {
                     setSignUpState(false);
                   }}
@@ -376,13 +389,17 @@ export default function SignLogin() {
               </span>
               <span className="signup-options">
                 <i
-                  className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""}`}
+                  className={`fa-solid fa-user-tie fa-xl icon ${
+                    userState === "tourguide" ? "active" : ""
+                  }`}
                   onClick={() => {
                     handleOptionsSignUp("tourguide");
                   }}
                 ></i>
                 <i
-                  className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""}`}
+                  className={`fa-solid fa-user fa-xl icon ${
+                    userState === "user" ? "active" : ""
+                  }`}
                   onClick={() => {
                     handleOptionsSignUp("user");
                   }}
@@ -503,6 +520,18 @@ export default function SignLogin() {
             </div>
             <div className="signup-overlay"></div>
           </>
+        ) : passwordState ? (
+          <ForgotPassword
+            setPasswordState={setPasswordState}
+            setFormData={setFormData}
+            formData={formData}
+            setResetMailState={setResetMailState}
+          />
+        ) : resetMailState ? (
+          <ResetPassword
+            email={formData.email}
+            setResetMailState={setResetMailState}
+          />
         ) : null}
         <Footer name="footer-signin" />
       </div>
