@@ -11,11 +11,13 @@ const bookingSchema = new mongoose.Schema({
     ref: 'User',
     required: [true, 'Booking must belong to a user!']
   },
-  places: [{
-    type: mongoose.Schema.ObjectId,
-    ref: 'Place',
-    required: [true, 'Booking must have at least one place!']
-  }],
+  places: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Place',
+      required: [true, 'Booking must have at least one place!']
+    }
+  ],
   date: {
     type: Date,
     required: [true, 'Booking must have a date!']
@@ -30,6 +32,7 @@ const bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
+    enum: ['pending', 'declined', 'accepted', 'paid'],
     default: 'pending'
   }
 });
