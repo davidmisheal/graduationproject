@@ -1147,7 +1147,8 @@ htmml {
 	/* Color for the active icon */
 }
 
-.signup-popup.show,.password-popup.show {
+.signup-popup.show,
+.password-popup.show {
 	animation: popupFadeIn 0.3s forwards;
 }
 
@@ -1816,6 +1817,7 @@ htmml {
 }
 
 .mytrips-element {
+	position: relative;
 	min-width: 300px;
 	background-color: white;
 	max-width: 300px;
@@ -1823,17 +1825,19 @@ htmml {
 }
 
 .mytrips-element-status {
-	position: relative;
+	position: absolute;
+	z-index: 2;
 	color: rgb(150, 150, 150);
 	font-size: 20px;
 	margin: 0;
-	bottom: 270px;
-	left: 170px;
+	bottom: 330px;
+	left: 200px;
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 
 }
 
 .mytrips-element img {
+	position: relative;
 	width: 300px;
 	height: 200px;
 	filter: brightness(0.5);
@@ -1856,12 +1860,13 @@ htmml {
 }
 
 .mytrips-element-details {
-	padding: 0px 10px 0px 40px;
+	padding: 0px 10px 0px 50px;
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	justify-content: center;
 	align-items: start;
-	margin-top: 20px;
+	margin: 20px 0;
+	row-gap: 20px;
 }
 
 .mytrips-element-details span {
@@ -1885,7 +1890,12 @@ htmml {
 	align-items: center;
 	background-color: #f0f3f4;
 }
-
+.mytrips-element-buttons{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+}
 .mytrips-elements-button span {
 	display: flex;
 	flex-direction: row;
@@ -2280,13 +2290,15 @@ h5 {
 	font-weight: 700;
 }
 
-.requests-element h5,.myorders-element h5 {
+.requests-element h5,
+.myorders-element h5 {
 	font-size: 12px;
 	font-weight: 600;
 	color: rgb(199, 199, 199);
 }
 
-.requests-status ,.order-status{
+.requests-status,
+.order-status {
 	font-size: 30px;
 	font-weight: 700;
 	color: rgb(227, 188, 59);
@@ -2335,14 +2347,16 @@ h5 {
 }
 
 .myorders-element {
-	padding:20px;
+	padding: 20px;
 	width: 100%;
 	display: grid;
 	grid-template-columns: 8fr 7fr 4fr;
 }
-.myorders-element-info h3{
+
+.myorders-element-info h3 {
 	margin-top: 0;
 }
+
 .myorders-element-info-user,
 .myorders-element-info-place {
 	display: flex;

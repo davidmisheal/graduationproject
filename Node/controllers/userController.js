@@ -95,7 +95,7 @@ exports.removeFavorite = catchAsync(async (req, res, next) => {
     await user.save();
 
     // Decrement the favorite count
-    await Place.findByIdAndUpdate(placeId, { $inc: { favoriteCount: -1 } });
+    await Place.findByIdAndUpdate(placeId, { $inc: { favoriteCount: 0 } });
   }
 
   res.status(204).json({

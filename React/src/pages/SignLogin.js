@@ -138,7 +138,8 @@ export default function SignLogin() {
         );
         setUser(response.data);
         console.log("Sign-up successful!", response.data);
-        navigate("/");
+        setSignUpState(false)
+        navigate("/signin");
       } catch (error) {
         console.error("Sign-up failed!", error);
         if (error.response) {

@@ -57,12 +57,15 @@ export default function ViewMore() {
       return;
     }
 
+    const tourPrice = bookedTourGuide ? bookedTourGuide.price : 0;
+    const totalPrice = place.price + tourPrice;
+
     try {
       const bookingDetails = await axios.post('http://localhost:3000/api/v1/bookings', {
         tour: bookedTourGuide ? bookedTourGuide._id : null,
         places: place ? [place._id] : [], // Ensure places is an array of place IDs
         date: selectedDate,
-        price: place ? place.price : 0
+        price: totalPrice
       }, {
         headers: {
           Authorization: `Bearer ${userData.token}`
@@ -129,7 +132,7 @@ export default function ViewMore() {
               <p>{place.location}</p>
             </span>
             <span className="viewmore-first-overlay-counters">
-              <i className="fa-solid fa-location-dot fa-xl"></i> <p>1000</p> | <i className="fa-solid fa-heart fa-xl"></i> <p>20000</p>
+              <i className="fa-solid fa-location-dot fa-xl"></i> <p>1000</p> | <i className="fa-solid fa-heart fa-xl"></i> <p>{place.favoriteCount}</p>
             </span>
           </div>
         </div>

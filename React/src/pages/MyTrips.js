@@ -65,7 +65,7 @@ export default function MyTrips() {
                 }, {});
                 setTours(newTours);
                 console.log("Places:", newPlaces);
-                console.log("booking:",);
+                console.log("booking:", bookingData);
 
                 console.log("Tours:", newTours[bookings[0].tour._id]);
             } catch (error) {
@@ -121,6 +121,7 @@ export default function MyTrips() {
                         <div className="mytrips-body">
                             {bookings.map((booking) => (
                                 <div key={booking._id} className="mytrips-element">
+                                    <h5 className="mytrips-element-status">{booking.status}</h5>
                                     {places[booking.places[0]._id] && places[booking.places[0]._id].img && (
                                         <img
                                             src={require(`../imgs/${places[booking.places[0]._id].img}`)}
@@ -146,7 +147,10 @@ export default function MyTrips() {
                                             </span>
                                             <span>
                                                 <i className="fa-solid fa-heart fa-sm"></i>
-                                                <p>2540</p>
+                                                <p>
+                                                    {places[booking.places[0]._id]
+                                                        ? places[booking.places[0]._id].favoriteCount
+                                                        : "0"}</p>
                                             </span>
                                             <span>
                                                 <i className="fa-regular fa-calendar fa-sm"></i>
@@ -161,7 +165,6 @@ export default function MyTrips() {
                                                     }
                                                 </p>
                                             </span>
-                                            <h5 className="mytrips-element-status">Pending</h5>
                                         </div>
                                     </div>
                                     <div className="mytrips-elements-button">
@@ -169,12 +172,19 @@ export default function MyTrips() {
                                             <i className="fa-solid fa-money-bill"></i>
                                             <p>{booking.price}</p>
                                         </span>
-                                        <button onClick={() => handleAddPlace(booking.places[0]._id)}>
-                                            Add
-                                        </button>
-                                        <button onClick={() => handleRemoveTrip(booking._id)}>
-                                            Remove
-                                        </button>
+                                        <span className="mytrips-element-buttons">
+                                            {
+                                                booking.status == "accepted" ?
+                                                    <button onClick={() => handleAddPlace(booking.places[0]._id)}>
+                                                        Add
+                                                    </button>
+                                                    :
+                                                    null
+                                            }
+                                            <button onClick={() => handleRemoveTrip(booking._id)}>
+                                                Remove
+                                            </button>
+                                        </span>
                                     </div>
                                 </div>
                             ))}
