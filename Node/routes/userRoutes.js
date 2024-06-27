@@ -32,7 +32,6 @@ router.post('/favorites', userController.addUserFavorite);
 
 router.delete('/favorites', userController.removeFavorite); // Add this line
 
-router.use(authController.restrictTo('admin'));
 
 router
   .route('/')

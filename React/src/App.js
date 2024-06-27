@@ -23,6 +23,7 @@ import { TourProvider } from "./context/TourContext";
 import ErrorBoundary from "./components/ErrorBoundary";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
+import MyOrders from "./pages/MyOrders";
 
 function App() {
   const loggedIn = window.localStorage.getItem("isLoggedIn");
@@ -51,6 +52,7 @@ function App() {
               <Route path="/requests" element={<Requests />} />
               <Route path="/viewmore/:id" element={<ViewMore />} />
               <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/myorders" element={<MyOrders/>}/>
               <Route
                 path="/reset-password/:token"
                 element={<ResetPassword />}

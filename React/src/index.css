@@ -1087,7 +1087,8 @@ htmml {
 	width: 100%;
 }
 
-.signup-overlay,.password-overlay {
+.signup-overlay,
+.password-overlay {
 	opacity: 0.8;
 	background-color: black;
 	width: 100%;
@@ -1097,7 +1098,8 @@ htmml {
 	top: 0;
 }
 
-.signup-popup,.password-popup {
+.signup-popup,
+.password-popup {
 	background-image: url('../src/imgs/signin-back.jpg');
 	background-repeat: no-repeat;
 	background-size: 1200px;
@@ -1118,16 +1120,20 @@ htmml {
 	transform: scale(0.9);
 	transition: opacity 0.3s ease, transform 0.3s ease;
 }
-.password-popup{
-width:25%;
+
+.password-popup {
+	width: 25%;
 }
-.password-popup input{
-	width:16vw;
+
+.password-popup input {
+	width: 16vw;
 }
-.password-popup button{
-	width:16vw;
+
+.password-popup button {
+	width: 16vw;
 
 }
+
 /* Add this CSS to your styles */
 .icon {
 	color: gray;
@@ -1870,22 +1876,25 @@ width:25%;
 .mytrips-element-details p {
 	font-size: 10px;
 }
-.mytrips-elements-button{
+
+.mytrips-elements-button {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	padding: 20px;
-	align-items:center ;
+	align-items: center;
 	background-color: #f0f3f4;
 }
-.mytrips-elements-button span{
+
+.mytrips-elements-button span {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 	column-gap: 5px;
 }
-.mytrips-elements-button button{
+
+.mytrips-elements-button button {
 	width: 80px;
 	padding: 8px 0px;
 	border-radius: 50px;
@@ -1895,11 +1904,13 @@ width:25%;
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
-.mytrips-elements-button button:hover{
+
+.mytrips-elements-button button:hover {
 	background-color: white;
 	color: black;
 }
-.checkout-body{
+
+.checkout-body {
 	width: 94%;
 	background-color: white;
 	padding: 20px;
@@ -1907,7 +1918,8 @@ width:25%;
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
 	margin-bottom: 30px;
 }
-.checkout-details{
+
+.checkout-details {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
@@ -1915,25 +1927,29 @@ width:25%;
 	width: 96%;
 	padding: 0px 30px;
 }
-.checkout-element{
-	list-style: none;	
+
+.checkout-element {
+	list-style: none;
 	width: 100%;
 	padding: 0;
 }
-.checkout-element li{
+
+.checkout-element li {
 	padding: 0px;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	align-items: center;
 }
-.checkout-total{
+
+.checkout-total {
 	display: flex;
 	flex-direction: row;
 	justify-content: space-between;
 	width: 100%;
 	align-items: center;
 }
+
 /*---------viewmore---------*/
 
 .viewmore img {
@@ -2264,13 +2280,13 @@ h5 {
 	font-weight: 700;
 }
 
-.requests-element h5 {
+.requests-element h5,.myorders-element h5 {
 	font-size: 12px;
 	font-weight: 600;
 	color: rgb(199, 199, 199);
 }
 
-.requests-status {
+.requests-status ,.order-status{
 	font-size: 30px;
 	font-weight: 700;
 	color: rgb(227, 188, 59);
@@ -2285,7 +2301,8 @@ h5 {
 	row-gap: 10px;
 }
 
-.requests-button button ,.checkout-body button{
+.requests-button button,
+.checkout-body button {
 	width: 150px;
 	padding: 10px;
 	background-color: white;
@@ -2295,7 +2312,57 @@ h5 {
 	cursor: pointer;
 }
 
-.requests-button button:hover,.checkout-body button:hover {
+.requests-button button:hover,
+.checkout-body button:hover {
 	background-color: black;
 	color: white;
+}
+
+/*--------myorders---------*/
+.myorders {
+	width: 90%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: start;
+	margin: 30px auto;
+}
+
+.myorders-body {
+	background-color: white;
+	width: 100%;
+	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+
+.myorders-element {
+	padding:20px;
+	width: 100%;
+	display: grid;
+	grid-template-columns: 8fr 7fr 4fr;
+}
+.myorders-element-info h3{
+	margin-top: 0;
+}
+.myorders-element-info-user,
+.myorders-element-info-place {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+}
+
+.myorders-element-info-user h4,
+p,
+.myorders-element-info-place h4 {
+	margin: 0;
+}
+
+.myorders-element-info-place ul {
+	list-style: none;
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+	margin: 0;
+	padding: 0;
 }
