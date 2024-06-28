@@ -15,6 +15,7 @@ const userRouter = require('./routes/userRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const placeRouter = require('./routes/placeRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
+const cancellationRequestRouter = require('./routes/cancellationRequestRoutes');
 const bodyParser = require('body-parser');
 
 const app = express();
@@ -75,6 +76,7 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/place', placeRouter);
 app.use('/api/v1/bookings', bookingRouter);
+app.use('/api/v1/cancellation-requests', cancellationRequestRouter);
 app.use('/images', express.static('public/img/tours'));
 app.use('/images', express.static('public/img/users'));
 app.use(

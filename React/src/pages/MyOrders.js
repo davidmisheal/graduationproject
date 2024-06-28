@@ -7,6 +7,7 @@ export default function MyOrders() {
     const [orders, setOrders] = useState([]);
     const [places, setPlaces] = useState({});
     const [users, setUsers] = useState({});
+    const [processing, setProcessing] = useState({});
 
     useEffect(() => {
         const fetchBookings = async () => {
@@ -56,6 +57,9 @@ export default function MyOrders() {
         const tourData = JSON.parse(
             window.localStorage.getItem("userData") || "{}"
         );
+
+        setProcessing((prev) => ({ ...prev, [bookingId]: true }));
+
         try {
             await axios.patch(
                 `http://localhost:3000/api/v1/bookings/${bookingId}/accept`,
@@ -69,6 +73,7 @@ export default function MyOrders() {
             );
         } catch (error) {
             console.error("Failed to accept booking:", error);
+            setProcessing((prev) => ({ ...prev, [bookingId]: false }));
         }
     };
 
@@ -76,6 +81,9 @@ export default function MyOrders() {
         const tourData = JSON.parse(
             window.localStorage.getItem("userData") || "{}"
         );
+
+        setProcessing((prev) => ({ ...prev, [bookingId]: true }));
+
         try {
             await axios.patch(
                 `http://localhost:3000/api/v1/bookings/${bookingId}/decline`,
@@ -89,6 +97,7 @@ export default function MyOrders() {
             );
         } catch (error) {
             console.error("Failed to decline booking:", error);
+            setProcessing((prev) => ({ ...prev, [bookingId]: false }));
         }
     };
 
@@ -138,10 +147,16 @@ export default function MyOrders() {
                                         <p className="order-status">{order.status}</p>
                                     </div>
                                     <div className="requests-button">
-                                        <button onClick={() => handleAcceptBooking(order._id)}>
+                                        <button
+                                            onClick={() => handleAcceptBooking(order._id)}
+                                            disabled={processing[order._id]}
+                                        >
                                             Accept
                                         </button>
-                                        <button onClick={() => handleDeclineBooking(order._id)}>
+                                        <button
+                                            onClick={() => handleDeclineBooking(order._id)}
+                                            disabled={processing[order._id]}
+                                        >
                                             Decline
                                         </button>
                                     </div>

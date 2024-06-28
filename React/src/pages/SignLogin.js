@@ -190,6 +190,7 @@ export default function SignLogin() {
         );
         setTour(response.data);
         console.log("Sign-up successful!", response.data);
+        alert("Wait an Admin to confirm!")
         navigate("/");
       } catch (error) {
         console.error("Sign-up failed!", error);

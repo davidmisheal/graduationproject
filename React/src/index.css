@@ -1843,7 +1843,10 @@ htmml {
 	height: 200px;
 	filter: brightness(0.5);
 }
-
+.mytrips-body{
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;}
 .mytrips-element-h4 {
 	width: 50%;
 }
@@ -1961,6 +1964,68 @@ htmml {
 	justify-content: space-between;
 	width: 100%;
 	align-items: center;
+}
+.cancel-overlay {
+    position: absolute;
+    width: 100%;
+    height: 1300px;
+    z-index: 3;
+    backdrop-filter: blur(2px) brightness(0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background for better focus */
+    transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+}
+
+.cancel-request-form {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 3;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 500px;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.cancel-request-form h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.cancel-request-form input,
+.cancel-request-form textarea {
+    width: 60%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+	text-align: center;
+	font-family: Arial, Helvetica, sans-serif;
+	resize: none;
+}
+.cancel-request-form span{
+	display: flex;
+	width: 60%;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	column-gap: 10px;
+}
+
+.cancel-request-form button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
 }
 
 /*---------viewmore---------*/
@@ -2240,14 +2305,16 @@ htmml {
 	display: flex;
 	flex-direction: column;
 	width: 80%;
+	height: 100%;
 	justify-content: center;
 	align-items: start;
 	margin: 0 auto;
 	height: fit-content;
+	margin-bottom: 100px;
 }
 
 .requests-body,
-.filtertour-body {
+.filtertour-body,.cancel-requests{
 	background-color: white;
 	padding: 10px;
 	border-radius: 5px;
@@ -2257,12 +2324,12 @@ htmml {
 }
 
 .requests-element,
-.filtertour-element {
+.filtertour-element ,.cancel-element{
 	padding: 20px;
 	display: grid;
 	grid-template-columns: 8fr 7fr 2fr;
 	justify-content: space-between;
-	align-items: center;
+	align-items: start;
 	width: 90%;
 	margin: auto;
 }
@@ -2272,7 +2339,7 @@ h5 {
 	margin: 0;
 }
 
-.requests-element h4 {
+.requests-element h4,.cancel-element h4 {
 	font-size: 30px;
 	font-weight: 500;
 }
@@ -2294,12 +2361,15 @@ h5 {
 }
 
 .requests-element h5,
-.myorders-element h5 {
+.myorders-element h5 ,.cancel-element h5{
 	font-size: 12px;
 	font-weight: 600;
 	color: rgb(199, 199, 199);
 }
 
+.cancel-element h4{
+	margin-top: 0;
+}
 .requests-status,
 .order-status {
 	font-size: 30px;
@@ -2317,7 +2387,7 @@ h5 {
 }
 
 .requests-button button,
-.checkout-body button {
+.checkout-body button,.cancel-request-form button {
 	width: 150px;
 	padding: 10px;
 	background-color: white;
@@ -2328,7 +2398,7 @@ h5 {
 }
 
 .requests-button button:hover,
-.checkout-body button:hover {
+.checkout-body button:hover ,.cancel-request-form button:hover{
 	background-color: black;
 	color: white;
 }
@@ -2340,13 +2410,14 @@ h5 {
 	flex-direction: column;
 	justify-content: center;
 	align-items: start;
-	margin: 30px auto;
+	margin:30px auto 160px auto;
 }
 
 .myorders-body {
 	background-color: white;
 	width: 100%;
 	box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+	padding: 20px;
 }
 
 .myorders-element {

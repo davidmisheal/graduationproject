@@ -4,7 +4,8 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 
 export default function Requests() {
-    const [pending, setPending] = useState([]);
+    const [pendingTours, setPendingTours] = useState([]);
+    const [cancellationRequests, setCancellationRequests] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -24,17 +25,21 @@ export default function Requests() {
                 const { token, data: { user } } = parsedData;
 
                 if (user.role !== "admin") {
-                    console.error("Unauthorized: Only admins can fetch pending tours");
+                    console.error("Unauthorized: Only admins can fetch pending tours and cancellation requests");
                     return;
                 }
 
-                const response = await axios.get("http://localhost:3000/api/v1/tours/pending-tours", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
-                setPending(response.data.data.pendingTours);
-                console.log(response.data);
+                const [toursResponse, cancellationsResponse] = await Promise.all([
+                    axios.get("http://localhost:3000/api/v1/tours/pending-tours", {
+                        headers: { Authorization: `Bearer ${token}` },
+                    }),
+                    axios.get("http://localhost:3000/api/v1/cancellation-requests", {
+                        headers: { Authorization: `Bearer ${token}` },
+                    })
+                ]);
+
+                setPendingTours(toursResponse.data.data.pendingTours);
+                setCancellationRequests(cancellationsResponse.data.data.requests);
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -43,7 +48,7 @@ export default function Requests() {
         fetchData();
     }, []);
 
-    const handleApprove = async (tourId) => {
+    const handleApproveTour = async (tourId) => {
         try {
             const storedData = localStorage.getItem("userData");
             if (!storedData) {
@@ -61,10 +66,84 @@ export default function Requests() {
             });
 
             if (response.data.status === 'success') {
-                setPending(pending.map(tour => tour._id === tourId ? { ...tour, approved: true } : tour));
+                setPendingTours(pendingTours.map(tour => tour._id === tourId ? { ...tour, approved: true } : tour));
             }
         } catch (error) {
             console.error("Error approving tour:", error);
+        }
+    };
+
+    const handleDeclineTour = async (tourId) => {
+        try {
+            const storedData = localStorage.getItem("userData");
+            if (!storedData) {
+                console.error("No user data found in localStorage.");
+                return;
+            }
+
+            const parsedData = JSON.parse(storedData);
+            const { token } = parsedData;
+
+            await axios.delete(`http://localhost:3000/api/v1/tours/${tourId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            setPendingTours(pendingTours.filter(tour => tour._id !== tourId));
+        } catch (error) {
+            console.error("Error declining tour:", error);
+        }
+    };
+
+
+    const handleApproveCancellation = async (requestId) => {
+        try {
+            const storedData = localStorage.getItem("userData");
+            if (!storedData) {
+                console.error("No user data found in localStorage.");
+                return;
+            }
+
+            const parsedData = JSON.parse(storedData);
+            const { token } = parsedData;
+
+            const response = await axios.patch(`http://localhost:3000/api/v1/cancellation-requests/${requestId}`, { status: 'approved' }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.data.status === 'success') {
+                setCancellationRequests(cancellationRequests.map(request => request._id === requestId ? { ...request, status: 'approved' } : request));
+            }
+        } catch (error) {
+            console.error("Error approving cancellation request:", error);
+        }
+    };
+
+    const handleDeclineCancellation = async (requestId) => {
+        try {
+            const storedData = localStorage.getItem("userData");
+            if (!storedData) {
+                console.error("No user data found in localStorage.");
+                return;
+            }
+
+            const parsedData = JSON.parse(storedData);
+            const { token } = parsedData;
+
+            const response = await axios.patch(`http://localhost:3000/api/v1/cancellation-requests/${requestId}`, { status: 'declined' }, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+
+            if (response.data.status === 'success') {
+                setCancellationRequests(cancellationRequests.map(request => request._id === requestId ? { ...request, status: 'declined' } : request));
+            }
+        } catch (error) {
+            console.error("Error declining cancellation request:", error);
         }
     };
 
@@ -74,7 +153,8 @@ export default function Requests() {
             <div className="requests">
                 <h2>My Requests</h2>
                 <div className="requests-body">
-                    {pending && pending.map((tour) => (
+                    <h3>Pending Tours</h3>
+                    {pendingTours.length > 0 ? pendingTours.map((tour) => (
                         <React.Fragment key={tour._id}>
                             <hr />
                             <div className="requests-element">
@@ -88,11 +168,39 @@ export default function Requests() {
                                     <p className="requests-status">{!tour.approved ? 'Pending' : 'Approved'}</p>
                                 </div>
                                 <div className="requests-button">
-                                    <button onClick={() => handleApprove(tour._id)}>Approve</button>
+                                    <button onClick={() => handleApproveTour(tour._id)} disabled={tour.approved} style={{ opacity: tour.approved ? 0.5 : 1 }}>Approve</button>
+                                    <button onClick={() => handleDeclineTour(tour._id)} disabled={tour.approved} style={{ opacity: tour.approved ? 0.5 : 1 }}>Decline</button>
                                 </div>
                             </div>
                         </React.Fragment>
-                    ))}
+                    )) : (
+                        <p>No pending tours found.</p>
+                    )}
+                </div>
+                <div className="cancel-requests">
+                    <h3>Cancellation Requests</h3>
+                    {cancellationRequests.length > 0 ? cancellationRequests.map((request) => (
+                        <React.Fragment key={request._id}>
+                            <hr />
+                            <div className="cancel-element">
+                                <div>
+                                    <h4>Booking ID: {request.booking._id}</h4>
+                                    <p>User: {request.user.name} ({request.user.email})</p>
+                                    <p>Reason: {request.reason}</p>
+                                </div>
+                                <div>
+                                    <h5>Status:</h5>
+                                    <p className="requests-status">{request.status}</p>
+                                </div>
+                                <div className="requests-button">
+                                    <button onClick={() => handleApproveCancellation(request._id)} disabled={request.status === 'approved'} style={{ opacity: request.status === 'approved' ? 0.5 : 1 }}>Approve</button>
+                                    <button onClick={() => handleDeclineCancellation(request._id)} disabled={request.status === 'approved'} style={{ opacity: request.status === 'approved' ? 0.5 : 1 }}>Decline</button>
+                                </div>
+                            </div>
+                        </React.Fragment>
+                    )) : (
+                        <p>No cancellation requests found.</p>
+                    )}
                 </div>
             </div>
             <Footer name="footer-main" />

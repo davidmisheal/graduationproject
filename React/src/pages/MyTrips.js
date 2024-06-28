@@ -10,6 +10,9 @@ export default function MyTrips() {
     const [places, setPlaces] = useState({});
     const [tours, setTours] = useState({});
     const [selectedPlaces, setSelectedPlaces] = useState([]);
+    const [cancelRequest, setCancelRequest] = useState(null);
+    const [cancelReason, setCancelReason] = useState("");
+    const [cancelRequestStatus, setCancelRequestStatus] = useState(null);
     const isLoggedIn = window.localStorage.getItem("isLoggedIn");
 
     useEffect(() => {
@@ -102,6 +105,32 @@ export default function MyTrips() {
         }
     };
 
+    const handleCancelRequest = (bookingId) => {
+        setCancelRequest(bookingId);
+        setCancelReason("");
+    };
+
+    const handleSubmitCancelRequest = async () => {
+        const userData = JSON.parse(
+            window.localStorage.getItem("userData") || "{}"
+        );
+        try {
+            await axios.post(
+                `http://localhost:3000/api/v1/cancellation-requests`,
+                { bookingId: cancelRequest, reason: cancelReason },
+                {
+                    headers: { Authorization: `Bearer ${userData.token}` },
+                }
+            );
+            alert("Cancel request sends Successfully!")
+            setCancelRequestStatus("Request submitted. Waiting for approval.");
+            setCancelRequest(null);
+        } catch (error) {
+            console.error("Error submitting cancel request:", error);
+            setCancelRequestStatus("Failed to submit request. Please try again.");
+        }
+    };
+
     const getTotalPrice = () => {
         return selectedPlaces.reduce((total, place) => total + place.price, 0);
     };
@@ -131,7 +160,7 @@ export default function MyTrips() {
             );
             alert("Payment successful!");
             setSelectedPlaces([]);
-            window.location.reload()
+            window.location.reload();
         } catch (error) {
             console.error("Error processing payment:", error);
         }
@@ -139,183 +168,169 @@ export default function MyTrips() {
 
     const confirmedTrips = bookings.filter((booking) => booking.status === "confirmed");
     const pendingTrips = bookings.filter((booking) => booking.status !== "confirmed");
-    console.log(confirmedTrips)
-    console.log(pendingTrips)
+
     return (
         <>
             <Nav />
             <div className="mytrips">
                 <h2 className="mytrips-title">My Trips</h2>
                 <div className="mytrips-confirmed">
-                    {
-                        isLoggedIn ? confirmedTrips.length > 0 ?
-                            (
-                                <>
-                                    <h2>Confirmed Trips</h2>
-                                    <div className="mytrips-body">
-                                        {confirmedTrips.map((booking) => (
-                                            <div key={booking._id} className="mytrips-element">
-                                                <h5 className="mytrips-element-status">{booking.status}</h5>
-                                                {places[booking.places[0]._id] && places[booking.places[0]._id].img && (
-                                                    <img
-                                                        src={require(`../imgs/${places[booking.places[0]._id].img}`)}
-                                                        alt={places[booking.places[0]._id].name}
-                                                    />
-                                                )}
-                                                <div>
-                                                    <span className="mytrips-element-h4">
-                                                        <h4>
-                                                            {places[booking.places[0]._id]
-                                                                ? places[booking.places[0]._id].name
-                                                                : "Unknown Place"}
-                                                        </h4>
-                                                    </span>
-                                                    <div className="mytrips-element-details">
-                                                        <span>
-                                                            <i className="fa-solid fa-location-dot fa-sm"></i>
-                                                            <p>
-                                                                {places[booking.places[0]._id]
-                                                                    ? places[booking.places[0]._id].location
-                                                                    : "Unknown Location"}
-                                                            </p>
-                                                        </span>
-                                                        <span>
-                                                            <i className="fa-solid fa-heart fa-sm"></i>
-                                                            <p>
-                                                                {places[booking.places[0]._id]
-                                                                    ? places[booking.places[0]._id].favoriteCount
-                                                                    : "0"}</p>
-                                                        </span>
-                                                        <span>
-                                                            <i className="fa-regular fa-calendar fa-sm"></i>
-                                                            <p>{new Date(booking.date).toLocaleDateString()}</p>
-                                                        </span>
-                                                        <span>
-                                                            <i className="fa-solid fa-user-tie fa-sm"></i>
-                                                            <p>
-                                                                {tours[booking.tour._id] && tours[booking.tour._id].data.name
-                                                                    ? tours[booking.tour._id].data.name
-                                                                    : "Unknown Tour Guide"
-                                                                }
-                                                            </p>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                                <div className="mytrips-elements-button">
-                                                    <span>
-                                                        <i className="fa-solid fa-money-bill"></i>
-                                                        <p>{booking.price}</p>
-                                                    </span>
-                                                    <span className="mytrips-element-buttons">
-                                                        {
-                                                            booking.status == "accepted" ?
-                                                                <button onClick={() => handleAddPlace(booking.places[0]._id)}>
-                                                                    Add
-                                                                </button>
-                                                                :
-                                                                null
+                    {isLoggedIn ? confirmedTrips.length > 0 ? (
+                        <>
+                            <h2>Confirmed Trips</h2>
+                            <div className="mytrips-body">
+                                {confirmedTrips.map((booking) => (
+                                    <div key={booking._id} className="mytrips-element">
+                                        <h5 className="mytrips-element-status">{booking.status}</h5>
+                                        {places[booking.places[0]._id] && places[booking.places[0]._id].img && (
+                                            <img
+                                                src={require(`../imgs/${places[booking.places[0]._id].img}`)}
+                                                alt={places[booking.places[0]._id].name}
+                                            />
+                                        )}
+                                        <div>
+                                            <span className="mytrips-element-h4">
+                                                <h4>
+                                                    {places[booking.places[0]._id]
+                                                        ? places[booking.places[0]._id].name
+                                                        : "Unknown Place"}
+                                                </h4>
+                                            </span>
+                                            <div className="mytrips-element-details">
+                                                <span>
+                                                    <i className="fa-solid fa-location-dot fa-sm"></i>
+                                                    <p>
+                                                        {places[booking.places[0]._id]
+                                                            ? places[booking.places[0]._id].location
+                                                            : "Unknown Location"}
+                                                    </p>
+                                                </span>
+                                                <span>
+                                                    <i className="fa-solid fa-heart fa-sm"></i>
+                                                    <p>
+                                                        {places[booking.places[0]._id]
+                                                            ? places[booking.places[0]._id].favoriteCount
+                                                            : "0"}</p>
+                                                </span>
+                                                <span>
+                                                    <i className="fa-regular fa-calendar fa-sm"></i>
+                                                    <p>{new Date(booking.date).toLocaleDateString()}</p>
+                                                </span>
+                                                <span>
+                                                    <i className="fa-solid fa-user-tie fa-sm"></i>
+                                                    <p>
+                                                        {tours[booking.tour._id] && tours[booking.tour._id].data.name
+                                                            ? tours[booking.tour._id].data.name
+                                                            : "Unknown Tour Guide"
                                                         }
-                                                        <button onClick={() => handleRemoveTrip(booking._id)}>
-                                                            Remove
-                                                        </button>
-                                                    </span>
-                                                </div>
+                                                    </p>
+                                                </span>
                                             </div>
-                                        ))}
+                                        </div>
+                                        <div className="mytrips-elements-button">
+                                            <span>
+                                                <i className="fa-solid fa-money-bill"></i>
+                                                <p>{booking.price}</p>
+                                            </span>
+                                            <span className="mytrips-element-buttons">
+                                                {booking.status === "accepted" && (
+                                                    <button onClick={() => handleAddPlace(booking.places[0]._id)}>
+                                                        Add
+                                                    </button>
+                                                )}
+                                                <button onClick={() => handleCancelRequest(booking._id)}>
+                                                    Cancel
+                                                </button>
+                                            </span>
+                                        </div>
                                     </div>
-                                </>
-                            ) : (
-                                "No trips added yet."
-                            ) : (
-                            "Sign in first!"
-                        )
-                    }
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        "No confirmed trips."
+                    ) : (
+                        "Sign in first!"
+                    )}
                 </div>
                 <div className="mytrips-pending">
-                    {
-                        isLoggedIn ?
-                            pendingTrips.length > 0 ?
-                                (
-                                    <>
-                                        <h2>Pending Trips</h2>
-                                        <div className="mytrips-body">
-                                            {pendingTrips.map((booking) => (
-                                                <div key={booking._id} className="mytrips-element">
-                                                    <h5 className="mytrips-element-status">{booking.status}</h5>
-                                                    {places[booking.places[0]._id] && places[booking.places[0]._id].img && (
-                                                        <img
-                                                            src={require(`../imgs/${places[booking.places[0]._id].img}`)}
-                                                            alt={places[booking.places[0]._id].name}
-                                                        />
-                                                    )}
-                                                    <div>
-                                                        <span className="mytrips-element-h4">
-                                                            <h4>
-                                                                {places[booking.places[0]._id]
-                                                                    ? places[booking.places[0]._id].name
-                                                                    : "Unknown Place"}
-                                                            </h4>
-                                                        </span>
-                                                        <div className="mytrips-element-details">
-                                                            <span>
-                                                                <i className="fa-solid fa-location-dot fa-sm"></i>
-                                                                <p>
-                                                                    {places[booking.places[0]._id]
-                                                                        ? places[booking.places[0]._id].location
-                                                                        : "Unknown Location"}
-                                                                </p>
-                                                            </span>
-                                                            <span>
-                                                                <i className="fa-solid fa-heart fa-sm"></i>
-                                                                <p>
-                                                                    {places[booking.places[0]._id]
-                                                                        ? places[booking.places[0]._id].favoriteCount
-                                                                        : "0"}</p>
-                                                            </span>
-                                                            <span>
-                                                                <i className="fa-regular fa-calendar fa-sm"></i>
-                                                                <p>{new Date(booking.date).toLocaleDateString()}</p>
-                                                            </span>
-                                                            <span>
-                                                                <i className="fa-solid fa-user-tie fa-sm"></i>
-                                                                <p>
-                                                                    {tours[booking.tour._id] && tours[booking.tour._id].data.name
-                                                                        ? tours[booking.tour._id].data.name
-                                                                        : "Unknown Tour Guide"
-                                                                    }
-                                                                </p>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                    <div className="mytrips-elements-button">
-                                                        <span>
-                                                            <i className="fa-solid fa-money-bill"></i>
-                                                            <p>{booking.price}</p>
-                                                        </span>
-                                                        <span className="mytrips-element-buttons">
-                                                            {
-                                                                booking.status == "accepted" ?
-                                                                    <button onClick={() => handleAddPlace(booking.places[0]._id)}>
-                                                                        Add
-                                                                    </button>
-                                                                    :
-                                                                    null
-                                                            }
-                                                            <button onClick={() => handleRemoveTrip(booking._id)}>
-                                                                Remove
-                                                            </button>
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            ))}
+                    {isLoggedIn ? pendingTrips.length > 0 ? (
+                        <>
+                            <h2>Pending Trips</h2>
+                            <div className="mytrips-body">
+                                {pendingTrips.map((booking) => (
+                                    <div key={booking._id} className="mytrips-element">
+                                        <h5 className="mytrips-element-status">{booking.status}</h5>
+                                        {places[booking.places[0]._id] && places[booking.places[0]._id].img && (
+                                            <img
+                                                src={require(`../imgs/${places[booking.places[0]._id].img}`)}
+                                                alt={places[booking.places[0]._id].name}
+                                            />
+                                        )}
+                                        <div>
+                                            <span className="mytrips-element-h4">
+                                                <h4>
+                                                    {places[booking.places[0]._id]
+                                                        ? places[booking.places[0]._id].name
+                                                        : "Unknown Place"}
+                                                </h4>
+                                            </span>
+                                            <div className="mytrips-element-details">
+                                                <span>
+                                                    <i className="fa-solid fa-location-dot fa-sm"></i>
+                                                    <p>
+                                                        {places[booking.places[0]._id]
+                                                            ? places[booking.places[0]._id].location
+                                                            : "Unknown Location"}
+                                                    </p>
+                                                </span>
+                                                <span>
+                                                    <i className="fa-solid fa-heart fa-sm"></i>
+                                                    <p>
+                                                        {places[booking.places[0]._id]
+                                                            ? places[booking.places[0]._id].favoriteCount
+                                                            : "0"}</p>
+                                                </span>
+                                                <span>
+                                                    <i className="fa-regular fa-calendar fa-sm"></i>
+                                                    <p>{new Date(booking.date).toLocaleDateString()}</p>
+                                                </span>
+                                                <span>
+                                                    <i className="fa-solid fa-user-tie fa-sm"></i>
+                                                    <p>
+                                                        {tours[booking.tour._id] && tours[booking.tour._id].data.name
+                                                            ? tours[booking.tour._id].data.name
+                                                            : "Unknown Tour Guide"
+                                                        }
+                                                    </p>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </>
-                                ) : (
-                                    "No trips added yet."
-                                ) : (
-                                "Sign in first!"
-                            )
-                    }
+                                        <div className="mytrips-elements-button">
+                                            <span>
+                                                <i className="fa-solid fa-money-bill"></i>
+                                                <p>{booking.price}</p>
+                                            </span>
+                                            <span className="mytrips-element-buttons">
+                                                {booking.status === "accepted" && (
+                                                    <button onClick={() => handleAddPlace(booking.places[0]._id)}>
+                                                        Add
+                                                    </button>
+                                                )}
+                                                <button onClick={() => handleRemoveTrip(booking._id)}>
+                                                    Remove
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    ) : (
+                        "No pending trips."
+                    ) : (
+                        "Sign in first!"
+                    )}
                 </div>
                 {selectedPlaces.length > 0 && (
                     <div className="checkout-body">
@@ -342,6 +357,23 @@ export default function MyTrips() {
                             </div>
                         </div>
                     </div>
+                )}
+                {cancelRequest && (<>
+                    <div className="cancel-overlay"></div>
+                    <div className="cancel-request-form">
+                        <h3>Request Trip Cancellation</h3>
+                        <textarea
+                            value={cancelReason}
+                            onChange={(e) => setCancelReason(e.target.value)}
+                            placeholder="Enter reason for cancellation"
+                        />
+                        <span>
+                            <button onClick={handleSubmitCancelRequest}>Submit</button>
+                            <button onClick={() => setCancelRequest(null)}>Cancel</button>
+                        </span>
+                        {cancelRequestStatus && <p>{cancelRequestStatus}</p>}
+                    </div>
+                </>
                 )}
             </div>
             <Footer name="footer-main" />

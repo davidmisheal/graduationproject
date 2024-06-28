@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Scroll } from "../func/Scroll";
 import '@fortawesome/fontawesome-free/css/all.css';
 import { useUser } from "../context/UserContext";
 import { useTour } from "../context/TourContext";
 
 export default function Nav(props) {
+  const navigate=useNavigate()
   const { user, userLogout } = useUser();
   const { Tour, tourLogout } = useTour();
   const isScrolled = Scroll(250);
@@ -46,6 +47,7 @@ export default function Nav(props) {
     window.localStorage.removeItem('userData');
     window.localStorage.setItem('isLoggedIn', false);
     window.location.reload();
+    navigate("/")
   };
 
   return (
