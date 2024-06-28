@@ -40,8 +40,24 @@ exports.createBooking = catchAsync(async (req, res, next) => {
 
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);
-exports.updateBooking = factory.updateOne(Booking);
 
+exports.updateBooking = catchAsync(async (req, res, next) => {
+  const updatedBooking = await Booking.findByIdAndUpdate(req.params.bookingId, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  if (!updatedBooking) {
+    return next(new AppError('No booking found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      booking: updatedBooking,
+    },
+  });
+});
 exports.deleteBooking = catchAsync(async (req, res, next) => {
   const booking = await Booking.findById(req.params.bookingId);
 

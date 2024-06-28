@@ -6,7 +6,9 @@ const router = express.Router();
 router.get('/tour/:tourId', bookingController.getBookingsByTour);
 router.patch('/:bookingId/accept', bookingController.acceptBooking);
 router.patch('/:bookingId/decline', bookingController.declineBooking);
-
+router
+  .route('/:bookingId')
+  .patch(authController.protect, bookingController.updateBooking);
 router.use(authController.protect);
 
 router
@@ -16,7 +18,6 @@ router
 
 router
   .route('/:bookingId')
-  .patch(bookingController.updateBooking)
   .delete(bookingController.deleteBooking);
 
 router.get('/user/:userId', bookingController.getBookingsByUser);

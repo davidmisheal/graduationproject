@@ -1828,10 +1828,11 @@ htmml {
 	position: absolute;
 	z-index: 2;
 	color: rgb(150, 150, 150);
-	font-size: 20px;
+	font-size: 17px;
 	margin: 0;
-	bottom: 330px;
-	left: 200px;
+	bottom: 335px;
+	right:0;
+	padding-right:10px ;
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 
 }
@@ -1890,12 +1891,14 @@ htmml {
 	align-items: center;
 	background-color: #f0f3f4;
 }
-.mytrips-element-buttons{
+
+.mytrips-element-buttons {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
 }
+
 .mytrips-elements-button span {
 	display: flex;
 	flex-direction: row;
