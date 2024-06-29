@@ -1679,46 +1679,56 @@ htmml {
 
 /* Profile Picture */
 .profile-picture {
-	position: relative; /* Ensures the camera icon can be positioned absolutely relative to this container */
+	position: relative;
+	/* Ensures the camera icon can be positioned absolutely relative to this container */
 	width: 120px;
 	height: 120px;
 	border-radius: 50%;
 	overflow: hidden;
 	margin-bottom: 20px;
-	display: flex; /* Ensures contents are centered */
+	display: flex;
+	/* Ensures contents are centered */
 	align-items: center;
 	justify-content: center;
-  }
-  
-  .profile-picture img {
+}
+
+.profile-picture img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-  }
-  
-  .photo-upload-label {
+}
+
+.photo-upload-label {
 	position: absolute;
-	bottom: 5px; /* Adjusts the position to the bottom-right corner */
-	right: 5px; /* Adjusts the position to the bottom-right corner */
-	background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+	bottom: 5px;
+	/* Adjusts the position to the bottom-right corner */
+	right: 5px;
+	/* Adjusts the position to the bottom-right corner */
+	background: rgba(0, 0, 0, 0.6);
+	/* Semi-transparent black background */
 	border-radius: 50%;
-	width: 30px; /* Size of the camera icon container */
-	height: 30px; /* Size of the camera icon container */
+	width: 30px;
+	/* Size of the camera icon container */
+	height: 30px;
+	/* Size of the camera icon container */
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	color: white; /* Color of the camera icon */
-  }
-  
-  .photo-upload-label:hover {
-	background: rgba(0, 0, 0, 0.8); /* Darker background on hover */
-  }
-  
-  input[type="file"] {
-	display: none; /* Hide the actual file input */
-  }
-  
+	color: white;
+	/* Color of the camera icon */
+}
+
+.photo-upload-label:hover {
+	background: rgba(0, 0, 0, 0.8);
+	/* Darker background on hover */
+}
+
+input[type="file"] {
+	display: none;
+	/* Hide the actual file input */
+}
+
 /* Favorites Section */
 .favorites-section {
 	background: #fff;
@@ -1997,7 +2007,7 @@ htmml {
 	align-items: center;
 }
 
-.cancel-overlay {
+.cancel-overlay,.picktour-overlay {
 	position: absolute;
 	width: 100%;
 	height: 1300px;
@@ -2064,40 +2074,40 @@ htmml {
 
 /*---------viewmore---------*/
 /* Gallery.css */
-
 .gallery {
 	display: flex;
-	flex-wrap: wrap;
+	flex-direction: row;
 	justify-content: center;
-	gap: 16px;
+	align-items: center;
+	gap: 30px;
 }
 
 .gallery-link {
-	display: block;
-	width: 200px;
-	/* Width of each thumbnail */
+	margin-left: 30px;
+	width: 150px;
+	/* Decreased width of each thumbnail */
 	border: none;
 	outline: none;
 	transition: transform 0.2s ease-in-out;
+}
+
+.gallery-img {
+	width: 150px;
+	/* Decreased width */
+	height: 100px;
+	/* Decreased height */
+	border-radius: 5px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	filter: brightness(0.4);
+	transition: all 0.2s ease-in-out;
 }
 
 .gallery-img:hover {
 	box-shadow: inset 0 0 0 2px rgb(17, 17, 17);
 	/* Inner border using box-shadow */
 	filter: none;
-
 }
 
-.gallery-img {
-	width: 260px;
-	height: 200px;
-	border-radius: 5px;
-	/* Rounded corners */
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	/* Subtle shadow */
-	filter: grayscale(1) brightness(0.7);
-	transition: all 0.2s ease-in-out;
-}
 
 @media (max-width: 768px) {
 	.gallery-link {
@@ -2124,7 +2134,6 @@ htmml {
 /* Initial State for ViewMore Sections */
 .viewmore-first,
 .viewmore-second-left,
-.viewmore-second-right,
 .viewmore-third {
 	opacity: 0;
 	transform: translateY(20px);
@@ -2133,33 +2142,24 @@ htmml {
 
 .viewmore-first.visible,
 .viewmore-second-left.visible,
-.viewmore-second-right.visible,
 .viewmore-third.visible {
 	opacity: 1;
 	transform: translateY(0);
 }
 
-/* Gallery Styling */
-.viewmore-second-right {
+.viewmore-third {
+	margin-top: 70px;
+	width: 65%;
 	display: flex;
 	flex-direction: column;
-	gap: 10px;
+	justify-content: center;
+	align-items: start;
+	row-gap: 10px;
 }
-
-.viewmore-second-right div {
-	position: relative;
+.viewmore-third span{
+	display: grid;
+	grid-template-columns: 1fr 1fr;
 }
-
-.viewmore-second-right img {
-	width: 100%;
-	height: auto;
-	cursor: pointer;
-}
-
-.viewmore-second-right .active {
-	border: 2px solid #007bff;
-}
-
 /* Tour Guide List */
 .tour-guide-list {
 	margin-top: 20px;
@@ -2197,29 +2197,25 @@ htmml {
 	margin: 5px 0;
 }
 
-.filtertour-element .requests-button button {
-	padding: 5px 10px;
-	background-color: #007bff;
-	color: #fff;
-	border: none;
-	cursor: pointer;
-}
-
-.filtertour-element .requests-button button:hover {
-	background-color: #0056b3;
-}
-
-
 .viewmore {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: start;
-	width: 80%;
-	margin: 20px auto;
+	width: 100%;
+	margin: 0px auto;
 	height: fit-content;
 	row-gap: 40px;
+}
 
+.viewmore-body {
+	width: 80%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	margin: auto;
+	row-gap: 100px;
 }
 
 .viewmore-first img {
@@ -2233,27 +2229,6 @@ htmml {
 	overflow-y: 100px;
 	border-bottom-left-radius: 5px;
 	border-bottom-right-radius: 5px;
-}
-
-.viewmore-first-overlay-details {
-	position: relative;
-	bottom: 210px;
-}
-
-.viewmore-first-overlay-counters {
-	position: relative;
-	bottom: 200px;
-}
-
-.viewmore-first-overlay {
-	left: 0px;
-	color: white;
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: end;
-	margin: 0;
-	padding: 0 40px;
 }
 
 .viewmore-first p {
@@ -2277,12 +2252,16 @@ htmml {
 }
 
 .viewmore-second {
-	width: auto;
-	margin: 0;
+	width: 90%;
+	margin: 50px auto;
 	display: grid;
 	grid-template-columns: 8fr 3fr;
 	align-items: start;
 	justify-content: center;
+}
+
+.viewmore-second-desc {
+	margin-top: 20px;
 }
 
 .viewmore-second-left p {
@@ -2290,15 +2269,64 @@ htmml {
 	width: 75%;
 	letter-spacing: 1px;
 	font-weight: 500;
+	color: rgb(0, 0, 0);
 }
 
-.viewmore-second-left h2 {
+.viewmore-second-left h3 {
 	margin-top: 0;
 	margin-bottom: 60px;
 	font-size: 40px;
 }
 
+.viewmore-second-right {
+	display: flex;
+	width: 100%;
+	justify-content: space-between;
+	flex-direction: column;
+}
 
+.viewmore-second-right span {
+	padding-bottom: 20px;
+}
+
+.viewmore-second-right p,
+li {
+	color: rgb(170, 170, 170);
+}
+
+.viewmore-second-right-counters {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	font-weight: 600;
+	border-bottom: 1px solid rgb(220, 218, 218);
+
+}
+
+.viewmore-second-right-season {
+	border-bottom: 1px solid rgb(220, 218, 218);
+}
+
+.viewmore-second-right-season p {
+	padding-left: 10px;
+}
+
+.viewmore-second-right-safety li {
+	padding: 0;
+	margin-top: 3px;
+}
+
+.viewmore-second-right-safety ul {
+	list-style: none;
+	padding-left: 10px;
+}
+
+.viewmore-second-right-counters i {
+	position: relative;
+	left: 10px;
+	color: red;
+}
 
 .viewmore-third {
 	display: flex;
@@ -2319,7 +2347,7 @@ htmml {
 	appearance: none;
 	background-color: transparent;
 	border: 2px solid #1A1A1A;
-	border-radius: 15px;
+	border-radius: 5px;
 	box-sizing: border-box;
 	color: #3B3B3B;
 	cursor: pointer;
@@ -2360,12 +2388,41 @@ htmml {
 }
 
 .datepicker-input {
-	padding: 10px;
+	padding: 6px;
+	font-size: 16px;
+	min-height: 50px;
+	max-height: 150px;
+	padding: 6px 30px;
 	font-size: 1rem;
 	border: 1px solid #ccc;
 	border-radius: 5px;
 }
-
+.tour-guide-list{
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 3;
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	width: 50%;
+	transition: transform 0.3s ease, opacity 0.3s ease;
+	transform: translateY(0);
+	opacity: 1;
+}
+.tour-guide-list i{
+	position: relative;
+	left: 380px;
+	color: gray;
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+}
+.tour-guide-list i:hover{
+	color: black;
+}
 /*------requests--------*/
 .requests {
 	display: flex;

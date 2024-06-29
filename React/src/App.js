@@ -24,12 +24,17 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import ForgotPassword from "./components/ForgotPassword";
 import ResetPassword from "./components/ResetPassword";
 import MyOrders from "./pages/MyOrders";
+import {initLightboxJS} from 'lightbox.js-react'
+import 'lightbox.js-react/dist/index.css'
+import { useEffect } from "react";
 
 function App() {
   const loggedIn = window.localStorage.getItem("isLoggedIn");
   const userData = window.localStorage.getItem("userData");
   console.log(loggedIn, "login");
-
+  useEffect(() => {
+    initLightboxJS("Insert your License Key here", "Insert plan type here");
+  }, []);
   return (
     <ErrorBoundary>
       <Router>
