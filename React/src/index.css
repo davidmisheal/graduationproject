@@ -1592,6 +1592,7 @@ htmml {
 }
 
 /*--------------profile page-------------------*/
+
 /* Profile Page Main Container */
 .profile-main {
 	display: flex;
@@ -1858,8 +1859,8 @@ htmml {
 	font-size: 17px;
 	margin: 0;
 	bottom: 335px;
-	right:0;
-	padding-right:10px ;
+	right: 0;
+	padding-right: 10px;
 	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 
 }
@@ -1870,10 +1871,13 @@ htmml {
 	height: 200px;
 	filter: brightness(0.5);
 }
-.mytrips-body{
+
+.mytrips-body {
 	padding: 20px;
 	border-radius: 10px;
-	box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;}
+	box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 2px 0px;
+}
+
 .mytrips-element-h4 {
 	width: 50%;
 }
@@ -1992,56 +1996,59 @@ htmml {
 	width: 100%;
 	align-items: center;
 }
+
 .cancel-overlay {
-    position: absolute;
-    width: 100%;
-    height: 1300px;
-    z-index: 3;
-    backdrop-filter: blur(2px) brightness(0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5); /* Add a semi-transparent background for better focus */
-    transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+	position: absolute;
+	width: 100%;
+	height: 1300px;
+	z-index: 3;
+	backdrop-filter: blur(2px) brightness(0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	/* Add a semi-transparent background for better focus */
+	transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
 }
 
 .cancel-request-form {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    z-index: 3;
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    width: 90%;
-    max-width: 500px;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-    transform: translateY(0);
-    opacity: 1;
+	position: absolute;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	z-index: 3;
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	width: 90%;
+	max-width: 500px;
+	transition: transform 0.3s ease, opacity 0.3s ease;
+	transform: translateY(0);
+	opacity: 1;
 }
 
 .cancel-request-form h2 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
+	margin-bottom: 20px;
+	font-size: 24px;
+	color: #333;
 }
 
 .cancel-request-form input,
 .cancel-request-form textarea {
-    width: 60%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 16px;
+	width: 60%;
+	padding: 10px;
+	margin-bottom: 15px;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	font-size: 16px;
 	text-align: center;
 	font-family: Arial, Helvetica, sans-serif;
 	resize: none;
 }
-.cancel-request-form span{
+
+.cancel-request-form span {
 	display: flex;
 	width: 60%;
 	flex-direction: row;
@@ -2051,17 +2058,66 @@ htmml {
 }
 
 .cancel-request-form button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+	background-color: #ccc;
+	cursor: not-allowed;
 }
 
 /*---------viewmore---------*/
+/* Gallery.css */
 
-.viewmore img {
+.gallery {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 16px;
+}
+
+.gallery-link {
+	display: block;
+	width: 200px;
+	/* Width of each thumbnail */
+	border: none;
+	outline: none;
+	transition: transform 0.2s ease-in-out;
+}
+
+.gallery-img:hover {
+	box-shadow: inset 0 0 0 2px rgb(17, 17, 17);
+	/* Inner border using box-shadow */
+	filter: none;
+
+}
+
+.gallery-img {
+	width: 260px;
+	height: 200px;
+	border-radius: 5px;
+	/* Rounded corners */
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+	/* Subtle shadow */
+	filter: grayscale(1) brightness(0.7);
+	transition: all 0.2s ease-in-out;
+}
+
+@media (max-width: 768px) {
+	.gallery-link {
+		width: 45%;
+		/* Adjust width for smaller screens */
+	}
+}
+
+@media (max-width: 480px) {
+	.gallery-link {
+		width: 100%;
+		/* Full width on very small screens */
+	}
+}
+
+.viewmore-first img {
 	transition: transform 0.3s ease-in-out;
 }
 
-.viewmore img:hover {
+.viewmore-first img:hover {
 	transform: scale(1.05);
 }
 
@@ -2221,31 +2277,12 @@ htmml {
 }
 
 .viewmore-second {
-	width: 100%;
+	width: auto;
+	margin: 0;
 	display: grid;
-	grid-template-columns: 9fr 1fr;
-	justify-content: space-between;
+	grid-template-columns: 8fr 3fr;
 	align-items: start;
-}
-
-.viewmore-second-right {
-	display: flex;
-	flex-direction: column;
 	justify-content: center;
-	align-items: center;
-	row-gap: 20px;
-}
-
-.viewmore-second img {
-	width: 300px;
-	filter: blur(1px);
-	transition: all 0.2s ease-in-out;
-	cursor: pointer;
-	border-radius: 5px;
-}
-
-.viewmore-second img:hover {
-	filter: none;
 }
 
 .viewmore-second-left p {
@@ -2261,12 +2298,7 @@ htmml {
 	font-size: 40px;
 }
 
-.viewmore-second-right div {
-	max-height: 170px;
-	overflow: hidden;
-	border-radius: 5px;
-	box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
-}
+
 
 .viewmore-third {
 	display: flex;
@@ -2327,6 +2359,13 @@ htmml {
 	transform: translateY(0);
 }
 
+.datepicker-input {
+	padding: 10px;
+	font-size: 1rem;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
 /*------requests--------*/
 .requests {
 	display: flex;
@@ -2341,7 +2380,8 @@ htmml {
 }
 
 .requests-body,
-.filtertour-body,.cancel-requests{
+.filtertour-body,
+.cancel-requests {
 	background-color: white;
 	padding: 10px;
 	border-radius: 5px;
@@ -2351,7 +2391,8 @@ htmml {
 }
 
 .requests-element,
-.filtertour-element ,.cancel-element{
+.filtertour-element,
+.cancel-element {
 	padding: 20px;
 	display: grid;
 	grid-template-columns: 8fr 7fr 2fr;
@@ -2366,7 +2407,8 @@ h5 {
 	margin: 0;
 }
 
-.requests-element h4,.cancel-element h4 {
+.requests-element h4,
+.cancel-element h4 {
 	font-size: 30px;
 	font-weight: 500;
 }
@@ -2388,15 +2430,17 @@ h5 {
 }
 
 .requests-element h5,
-.myorders-element h5 ,.cancel-element h5{
+.myorders-element h5,
+.cancel-element h5 {
 	font-size: 12px;
 	font-weight: 600;
 	color: rgb(199, 199, 199);
 }
 
-.cancel-element h4{
+.cancel-element h4 {
 	margin-top: 0;
 }
+
 .requests-status,
 .order-status {
 	font-size: 30px;
@@ -2414,7 +2458,8 @@ h5 {
 }
 
 .requests-button button,
-.checkout-body button,.cancel-request-form button {
+.checkout-body button,
+.cancel-request-form button {
 	width: 150px;
 	padding: 10px;
 	background-color: white;
@@ -2425,7 +2470,8 @@ h5 {
 }
 
 .requests-button button:hover,
-.checkout-body button:hover ,.cancel-request-form button:hover{
+.checkout-body button:hover,
+.cancel-request-form button:hover {
 	background-color: black;
 	color: white;
 }
@@ -2437,7 +2483,7 @@ h5 {
 	flex-direction: column;
 	justify-content: center;
 	align-items: start;
-	margin:30px auto 160px auto;
+	margin: 30px auto 160px auto;
 }
 
 .myorders-body {

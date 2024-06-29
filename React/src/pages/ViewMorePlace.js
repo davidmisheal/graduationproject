@@ -5,6 +5,7 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Gallery from "../components/ImageGallery";
 
 export default function ViewMore() {
   const { id } = useParams(); // Get the place ID from the URL
@@ -149,17 +150,7 @@ export default function ViewMore() {
               {place.description3}
             </p>
           </div>
-          <div className="viewmore-second-right visible">
-            <div>
-              <img src={require('../imgs/khan-el-khalili1.jpg')} alt="Khan El Khalili" />
-            </div>
-            <div>
-              <img src={require('../imgs/Khan-El-Khalili2.jpg')} alt="Khan El Khalili" />
-            </div>
-            <div>
-              <img src={require('../imgs/khan3.jpg')} alt="Khan El Khalili" />
-            </div>
-          </div>
+          <Gallery imgs={place.images}/>
         </div>
         <div className="viewmore-third visible">
           <h3> Price : {place.price}</h3>
