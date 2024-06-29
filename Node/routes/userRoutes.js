@@ -32,7 +32,6 @@ router.post('/favorites', userController.addUserFavorite);
 
 router.delete('/favorites', userController.removeFavorite); // Add this line
 
-
 router
   .route('/')
   .get(userController.getAllUsers)
@@ -41,7 +40,12 @@ router
 router
   .route('/:id')
   .get(userController.getUser)
-  .patch(userController.updateUser)
+  .patch(
+    userController.updateUser,
+    userController.uploadUserPhoto,
+    userController.resizeUserPhoto,
+    userController.updateMe
+  )
   .delete(userController.deleteUser);
 
 module.exports = router;

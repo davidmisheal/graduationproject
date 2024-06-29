@@ -1678,19 +1678,46 @@ htmml {
 
 /* Profile Picture */
 .profile-picture {
+	position: relative; /* Ensures the camera icon can be positioned absolutely relative to this container */
 	width: 120px;
 	height: 120px;
 	border-radius: 50%;
 	overflow: hidden;
 	margin-bottom: 20px;
-}
-
-.profile-picture img {
+	display: flex; /* Ensures contents are centered */
+	align-items: center;
+	justify-content: center;
+  }
+  
+  .profile-picture img {
 	width: 100%;
 	height: 100%;
 	object-fit: cover;
-}
-
+  }
+  
+  .photo-upload-label {
+	position: absolute;
+	bottom: 5px; /* Adjusts the position to the bottom-right corner */
+	right: 5px; /* Adjusts the position to the bottom-right corner */
+	background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+	border-radius: 50%;
+	width: 30px; /* Size of the camera icon container */
+	height: 30px; /* Size of the camera icon container */
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	color: white; /* Color of the camera icon */
+  }
+  
+  .photo-upload-label:hover {
+	background: rgba(0, 0, 0, 0.8); /* Darker background on hover */
+  }
+  
+  input[type="file"] {
+	display: none; /* Hide the actual file input */
+  }
+  
 /* Favorites Section */
 .favorites-section {
 	background: #fff;

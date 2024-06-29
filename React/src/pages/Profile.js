@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import { useUser } from "../context/UserContext"; // Import useUser hook
+import { useUser } from "../context/UserContext";
 import ChangePassword from "../components/ChangePassword";
-import axios from "axios"; // Import axios for making HTTP requests
-import { Link } from "react-router-dom"; // Import Link for navigation
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { FaCamera } from "react-icons/fa";
 
 export default function Profile() {
   const [edit, setEdit] = useState(false);
-  const { user } = useUser(); // Use the user data
+  const { user } = useUser();
   const isLoggedIn = window.localStorage.getItem("isLoggedIn");
   const [userData, setUserData] = useState(() => {
     const storedUserData = window.localStorage.getItem("userData");
@@ -54,7 +55,6 @@ export default function Profile() {
     try {
       if (userData && userData.token) {
         const token = userData.token;
-        console.log("User token:", token);
         const response = await axios.delete(
           "http://localhost:3000/api/v1/users/favorites",
           {
@@ -75,6 +75,51 @@ export default function Profile() {
     }
   };
 
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    try {
+      const response = await axios.patch(
+        "http://localhost:3000/api/v1/users/updateMe",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      console.log("Photo upload response:", response);
+      alert("Profile photo updated successfully!");
+      setUserData({
+        ...userData,
+        data: {
+          ...userData.data,
+          user: { ...userData.data.user, photo: response.data.data.user.photo },
+        },
+      });
+      // Optionally update local storage or any other caching mechanism
+      window.localStorage.setItem(
+        "userData",
+        JSON.stringify({
+          ...userData,
+          data: {
+            ...userData.data,
+            user: {
+              ...userData.data.user,
+              photo: response.data.data.user.photo,
+            },
+          },
+        })
+      );
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+      alert("Failed to update profile photo");
+    }
+  };
+
   if (!userData) {
     return (
       <>
@@ -88,6 +133,7 @@ export default function Profile() {
       </>
     );
   }
+
   return (
     <>
       <Nav />
@@ -103,20 +149,27 @@ export default function Profile() {
                   e.target.onerror = null;
                   e.target.src = "http://localhost:3000/img/users/default.jpg";
                 }}
-              />  
+              />
             ) : (
               <i className="fa-solid fa-user fa-2xl"></i>
             )}
+            <label htmlFor="photo-upload" className="photo-upload-label">
+              <FaCamera />
+              <input
+                id="photo-upload"
+                type="file"
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+              />
+            </label>
           </div>
           <span className="profile-email">
             <h2>E-Mail</h2>
             <p className="pass-email">{isLoggedIn ? email : "Loading..."}</p>
           </span>
           <span className="profile-pass">
-            <span>
-              <h2>Password</h2>
-              <p className="pass-p">..............</p>
-            </span>
+            <h2>Password</h2>
+            <p className="pass-p">..............</p>
             <p className="changepass" onClick={() => setEdit(!edit)}>
               Change Password?
             </p>

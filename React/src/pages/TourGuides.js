@@ -18,7 +18,7 @@ function TourGuides() {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const { data } = await axios.get(`${API_URL}`);
+        const { data } = await axios.get(`${API_URL}?approved=true`);
         setTours(data.data.data);
       } catch (error) {
         console.error("Error fetching tours:", error);
@@ -52,9 +52,11 @@ function TourGuides() {
               name={tour.name}
               brief={tour.summary}
               city={
-                tour.location
-                  ? <p>{tour.location}</p>
-                  : "Location not specified"
+                tour.location ? (
+                  <p>{tour.location}</p>
+                ) : (
+                  "Location not specified"
+                )
               }
             />
           ))}

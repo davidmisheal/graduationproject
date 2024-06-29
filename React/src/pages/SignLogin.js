@@ -138,7 +138,7 @@ export default function SignLogin() {
         );
         setUser(response.data);
         console.log("Sign-up successful!", response.data);
-        setSignUpState(false)
+        setSignUpState(false);
         navigate("/signin");
       } catch (error) {
         console.error("Sign-up failed!", error);
@@ -155,7 +155,8 @@ export default function SignLogin() {
         }));
       }
     } else if (userState === "tourguide") {
-      const { name, email, password, location, price, role } = formData;
+      const { name, email, password, location, price, role, imageCover } =
+        formData;
       let isValid = true;
       const newErrors = {
         name: "",
@@ -163,6 +164,7 @@ export default function SignLogin() {
         password: "",
         price: "",
         location: "",
+        imageCover: null,
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -183,22 +185,28 @@ export default function SignLogin() {
         return;
       }
 
+      const data = new FormData();
+      data.append("name", name);
+      data.append("email", email);
+      data.append("password", password);
+      data.append("location", location);
+      data.append("price", price);
+      data.append("role", role);
+      data.append("imageCover", imageCover);
+
       try {
-        const response = await axios.post(
-          "http://localhost:3000/api/v1/tours/signup",
-          { name, email, password, location, price, role }
-        );
+        const response = await axios({
+          method: "post",
+          url: "http://localhost:3000/api/v1/tours/signup",
+          data: data,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         setTour(response.data);
         console.log("Sign-up successful!", response.data);
-        alert("Wait an Admin to confirm!")
-        navigate("/");
+        alert("Wait an Admin to confirm!");
+        navigate("/"); // Assuming redirect on successful signup
       } catch (error) {
         console.error("Sign-up failed!", error);
-        if (error.response) {
-          console.error("Error Response Data:", error.response.data);
-          console.error("Error Response Status:", error.response.status);
-          console.error("Error Response Headers:", error.response.headers);
-        }
         setErrors((prev) => ({
           ...prev,
           formError: error.response
@@ -209,6 +217,9 @@ export default function SignLogin() {
     }
   };
 
+  const handleImageChange = (e) => {
+    setFormData({ ...formData, imageCover: e.target.files[0] });
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
     if (userState === "user") {
@@ -503,7 +514,18 @@ export default function SignLogin() {
                         setFormData({ ...formData, location: e.target.value })
                       }
                     />
-
+                    <input
+                      type="file"
+                      name="imageCover"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      style={{
+                        display: "block",
+                        width: "100%",
+                        padding: "8px",
+                        margin: "10px 0",
+                      }}
+                    />
                     {errors.password && (
                       <p
                         style={{

@@ -94,6 +94,8 @@ exports.signupTour = catchAsync(async (req, res) => {
     maxGroupSize
   } = req.body;
 
+  const imageCover = req.body.imageCover;
+
   const newTour = await Tour.create({
     name,
     email,
@@ -102,6 +104,7 @@ exports.signupTour = catchAsync(async (req, res) => {
     location,
     price,
     maxGroupSize,
+    imageCover,
     approved: false
   });
 
