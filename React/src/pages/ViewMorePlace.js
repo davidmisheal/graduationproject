@@ -7,6 +7,8 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Gallery from "../components/ImageGallery";
 import Category_part from "../components/Category_part";
+import { registerLocale } from "react-datepicker";
+import enGB from "date-fns/locale/en-GB";
 
 export default function ViewMore() {
   const { id } = useParams(); // Get the place ID from the URL
@@ -55,6 +57,15 @@ export default function ViewMore() {
       loadImage();
     }
   }, [place]);
+
+  useEffect(() => {
+    // Register locale for date picker
+    registerLocale("en-GB", enGB);
+
+    // Set minDate for date picker to prevent selection of past dates
+    const today = new Date();
+    setSelectedDate(today); // Start with today's date
+  }, []);
 
   const handleAddToTrip = async () => {
     const userData = JSON.parse(window.localStorage.getItem("userData"));
@@ -170,10 +181,13 @@ export default function ViewMore() {
                   <DatePicker
                     selected={selectedDate}
                     onChange={(date) => setSelectedDate(date)}
+                    minDate={new Date()} // Prevents selecting past dates
                     dateFormat="dd/MM/yyyy"
                     placeholderText="Select a date"
                     className="datepicker-input"
+                    locale="en-GB"
                   />
+
                   <button
                     className="button-28"
                     role="button"
