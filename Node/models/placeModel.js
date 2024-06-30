@@ -8,7 +8,7 @@ const placeSchema = new mongoose.Schema({
   description3: { type: String, required: false },
   img: { type: String, required: false },
   images: [String],
-  season: { type: String, required: true },
+  season: { type: String, required: false },
   safetyTips: { type: String, required: false },
   tourismType: { type: String, required: true },
   location: { type: String, required: true },
