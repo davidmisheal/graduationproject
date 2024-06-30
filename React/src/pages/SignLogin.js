@@ -101,59 +101,124 @@ export default function SignLogin() {
 
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const newErrors = {};
+    console.log("Form Data:", formData);
 
-    // Validate Full Name
-    if (!formData.name.trim()) {
-      newErrors.name = "Name is required";
+    if (userState === "user") {
+      const { name, email, password, confirmPassword, role } = formData;
+      let isValid = true;
+      const newErrors = {
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      };
+
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        newErrors.email = "Invalid email address";
+        isValid = false;
+      }
+
+      if (password.length < 6) {
+        newErrors.password = "Password must be at least 6 characters long";
+        isValid = false;
+      }
+
+      if (password !== confirmPassword) {
+        newErrors.confirmPassword = "Passwords do not match";
+        isValid = false;
+      }
+
+      console.log("Validation Errors:", newErrors);
       setErrors(newErrors);
-      return; // Stop further validation
-    }
 
-    // Validate Email
-    if (!formData.email.trim()) {
-      newErrors.email = "Email is required";
-    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
-      newErrors.email = "Invalid email address";
-    }
-    if (newErrors.email) {
+      if (!isValid) {
+        console.log("Validation failed");
+        return;
+      }
+
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/v1/users/signup",
+          { name, email, password, role }
+        );
+        setUser(response.data);
+        console.log("Sign-up successful!", response.data);
+        navigate("/");
+      } catch (error) {
+        console.error("Sign-up failed!", error);
+        if (error.response) {
+          console.error("Error Response Data:", error.response.data);
+          console.error("Error Response Status:", error.response.status);
+          console.error("Error Response Headers:", error.response.headers);
+        }
+        setErrors((prev) => ({
+          ...prev,
+          formError: error.response
+            ? error.response.data.message
+            : "An unknown error occurred",
+        }));
+      }
+    } else if (userState === "tourguide") {
+      const { name, email, password, location, price, role, imageCover } =
+        formData;
+      let isValid = true;
+      const newErrors = {
+        name: "",
+        email: "",
+        password: "",
+        price: "",
+        location: "",
+        imageCover: null,
+        formError: "",
+      };
+
+      if (!/^\S+@\S+\.\S+$/.test(email)) {
+        newErrors.email = "Invalid email address";
+        isValid = false;
+      }
+
+      if (password.length < 6) {
+        newErrors.password = "Password must be at least 6 characters long";
+        isValid = false;
+      }
+
+      console.log("Validation Errors:", newErrors);
       setErrors(newErrors);
-      return; // Stop further validation if email is invalid
-    }
 
-    // Validate Password
-    if (!formData.password) {
-      newErrors.password = "Password is required";
-    } else if (formData.password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters long";
-    }
-    if (newErrors.password) {
-      setErrors(newErrors);
-      return; // Stop further validation if password is invalid
-    }
+      if (!isValid) {
+        console.log("Validation failed");
+        return;
+      }
 
-    // Confirm Password
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      setErrors(newErrors);
-      return; // Stop further validation
-    }
+      const data = new FormData();
+      data.append("name", name);
+      data.append("email", email);
+      data.append("password", password);
+      data.append("location", location);
+      data.append("price", price);
+      data.append("role", role);
+      data.append("imageCover", imageCover);
 
-    // No errors, proceed with sign-up
-    setErrors({}); // Clear any existing errors
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/users/signup",
-        formData
-      );
-      setUser(response.data);
-      alert("Sign-up successful!");
-      navigate("/signin");
-    } catch (error) {
-      console.error("Sign-up failed!", error);
-      setErrors({
-        formError: error.response?.data?.message || "An unknown error occurred",
-      });
+      try {
+        const response = await axios({
+          method: "post",
+          url: "http://localhost:3000/api/v1/tours/signup",
+          data: data,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        setTour(response.data);
+        console.log("Sign-up successful!", response.data);
+        alert("Wait an Admin to confirm!");
+        navigate("/"); // Assuming redirect on successful signup
+      } catch (error) {
+        console.error("Sign-up failed!", error);
+        setErrors((prev) => ({
+          ...prev,
+          formError: error.response
+            ? error.response.data.message
+            : "An unknown error occurred",
+        }));
+      }
     }
   };
 
@@ -207,6 +272,35 @@ export default function SignLogin() {
         setErrors((prev) => ({
           ...prev,
           formError: message,
+        }));
+      }
+    } else if (userState === "tourguide") {
+      const { email, password } = formData;
+      const newErrors = { email: "", password: "" };
+
+      if (!password) {
+        newErrors.password = "Password is required";
+        setErrors(newErrors);
+        return;
+      }
+      try {
+        const response = await axios.post(
+          "http://localhost:3000/api/v1/tours/login",
+          {
+            email,
+            password,
+          }
+        );
+        setTour(response.data); // Store user data in context
+        console.log("Login successful!", response.data);
+        window.localStorage.setItem("isLoggedIn", true);
+        window.localStorage.setItem("userData", JSON.stringify(response.data));
+        navigate("/");
+      } catch (error) {
+        console.error("Login failed!", error);
+        setErrors((prev) => ({
+          ...prev,
+          formError: error.response.data.message || "An error occurred",
         }));
       }
     }
