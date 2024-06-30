@@ -188,3 +188,32 @@ exports.declineBooking = catchAsync(async (req, res, next) => {
     }
   });
 });
+
+exports.finishedBooking = catchAsync(async (req, res, next) => {
+  const { bookingId } = req.params;
+
+  const booking = await Booking.findById(bookingId).populate('tour');
+
+  if (!booking) {
+    return next(new AppError('No booking found with that ID', 404));
+  }
+
+  // Check if the booking status is already 'accepted' or 'declined'
+  if (booking.status === 'accepted' || booking.status === 'declined') {
+    return res.status(409).json({
+      status: 'error',
+      message: 'Booking status cannot be changed anymore.'
+    });
+  }
+
+  booking.status = 'finished';
+  await booking.save();
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      bookingId: booking._id,
+      status: booking.status
+    }
+  });
+});

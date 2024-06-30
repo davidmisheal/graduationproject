@@ -2102,7 +2102,7 @@ input[type="file"] {
 	transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
 }
 
-.cancel-request-form {
+.cancel-request-form,.review-form {
 	position: absolute;
 	display: flex;
 	flex-direction: column;
@@ -2127,7 +2127,7 @@ input[type="file"] {
 }
 
 .cancel-request-form input,
-.cancel-request-form textarea {
+.cancel-request-form textarea ,.review-form input ,textarea {
 	width: 60%;
 	padding: 10px;
 	margin-bottom: 15px;
@@ -2610,7 +2610,7 @@ h5 {
 
 .requests-button button,
 .checkout-body button,
-.cancel-request-form button {
+.cancel-request-form button ,.review-form button{
 	width: 150px;
 	padding: 10px;
 	background-color: white;
@@ -2622,7 +2622,7 @@ h5 {
 
 .requests-button button:hover,
 .checkout-body button:hover,
-.cancel-request-form button:hover {
+.cancel-request-form button:hover , .review-form button:hover{
 	background-color: black;
 	color: white;
 }

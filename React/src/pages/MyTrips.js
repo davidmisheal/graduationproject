@@ -166,8 +166,8 @@ export default function MyTrips() {
         }
     };
 
-    const confirmedTrips = bookings.filter((booking) => booking.status === "confirmed");
-    const pendingTrips = bookings.filter((booking) => booking.status !== "confirmed");
+    const confirmedTrips = bookings.filter((booking) => booking.status === "confirmed" || booking.status === "finished");
+    const pendingTrips = bookings.filter((booking) => booking.status !== "confirmed" && booking.status !== "finished");
 
     return (
         <>
@@ -238,9 +238,16 @@ export default function MyTrips() {
                                                         Add
                                                     </button>
                                                 )}
-                                                <button onClick={() => handleCancelRequest(booking._id)}>
-                                                    Cancel
-                                                </button>
+                                                {
+                                                    booking.status === "confirmed" ? <button onClick={() => handleCancelRequest(booking._id)}>
+                                                        Cancel
+                                                    </button> : null
+                                                }
+                                                {
+                                                    booking.status === "finished" ? <button>
+                                                        Review
+                                                    </button> : null
+                                                }
                                             </span>
                                         </div>
                                     </div>
@@ -249,7 +256,7 @@ export default function MyTrips() {
                         </>
                     ) : (
                         <div className="mytrips-off">
-                        No confirmed trips.
+                            No confirmed trips.
                         </div>
                     ) : (
                         "Sign in first!"
@@ -330,7 +337,7 @@ export default function MyTrips() {
                         </>
                     ) : (
                         <div className="mytrips-off">
-                        No pending trips.
+                            No pending trips.
                         </div>
                     ) : (
                         "Sign in first!"
@@ -379,6 +386,7 @@ export default function MyTrips() {
                     </div>
                 </>
                 )}
+                
             </div>
             <Footer name="footer-main" />
         </>

@@ -101,6 +101,27 @@ export default function MyOrders() {
         }
     };
 
+    const handleFinishBooking = async (bookingId) => {
+        const tourData = JSON.parse(
+            window.localStorage.getItem("userData") || "{}"
+        );
+
+        try {
+            await axios.patch(
+                `http://localhost:3000/api/v1/bookings/${bookingId}/finish`,
+                {},
+                { headers: { Authorization: `Bearer ${tourData.token}` } }
+            );
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order._id === bookingId ? { ...order, status: "finished" } : order
+                )
+            );
+        } catch (error) {
+            console.error("Failed to finish booking:", error);
+        }
+    };
+
     return (
         <>
             <Nav />
@@ -109,63 +130,70 @@ export default function MyOrders() {
                 <div className="myorders-body">
                     {orders.length > 0 ? (
                         orders.map((order) => (
-                            <>
-                                <div key={order._id} className="myorders-element">
-                                    <div className="myorders-element-info">
-                                        <h3>Booking ID: {order._id}</h3>
-                                        <div className="myorders-element-info-user">
-                                            {users[order.user._id] ? (
-                                                <>
-                                                    <p>Username: {users[order.user._id].name}</p>
-                                                </>
-                                            ) : (
-                                                <p>Loading...</p>
-                                            )}
-                                        </div>
-                                        <p>
-                                            <strong>Date:</strong>{" "}
-                                            {new Date(order.date).toLocaleDateString()}
-                                        </p>
-                                        <p>
-                                            <strong>Price:</strong> {order.price} L.E
-                                        </p>
-                                        <div className="myorders-element-info-place">
-                                            <h4>Place:</h4>
-                                            <ul>
-                                                {order.places.map((place) => (
-                                                    <li key={place._id}>
-                                                        {places[place._id]
-                                                            ? places[place._id].name
-                                                            : "Loading..."}
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
+                            <div key={order._id} className="myorders-element">
+                                <div className="myorders-element-info">
+                                    <h3>Booking ID: {order._id}</h3>
+                                    <div className="myorders-element-info-user">
+                                        {users[order.user._id] ? (
+                                            <p>Username: {users[order.user._id].name}</p>
+                                        ) : (
+                                            <p>Loading...</p>
+                                        )}
                                     </div>
-                                    <div>
-                                        <h5>Status:</h5>
-                                        <p className="order-status">{order.status}</p>
-                                    </div>
-                                    <div className="requests-button">
-                                        <button
-                                            onClick={() => handleAcceptBooking(order._id)}
-                                            disabled={processing[order._id]}
-                                        >
-                                            Accept
-                                        </button>
-                                        <button
-                                            onClick={() => handleDeclineBooking(order._id)}
-                                            disabled={processing[order._id]}
-                                        >
-                                            Decline
-                                        </button>
+                                    <p>
+                                        <strong>Date:</strong>{" "}
+                                        {new Date(order.date).toLocaleDateString()}
+                                    </p>
+                                    <p>
+                                        <strong>Price:</strong> {order.price} L.E
+                                    </p>
+                                    <div className="myorders-element-info-place">
+                                        <h4>Place:</h4>
+                                        <ul>
+                                            {order.places.map((place) => (
+                                                <li key={place._id}>
+                                                    {places[place._id]
+                                                        ? places[place._id].name
+                                                        : "Loading..."}
+                                                </li>
+                                            ))}
+                                        </ul>
                                     </div>
                                 </div>
-                            </>
+                                <div>
+                                    <h5>Status:</h5>
+                                    <p className="order-status">{order.status}</p>
+                                </div>
+                                <div className="requests-button">
+                                    {order.status === "confirmed" ? (
+                                        <>
+                                            <button onClick={()=>{handleFinishBooking(order._id)}}>Done</button>
+                                        </>
+                                    ) : order.status === "finished" ? (
+                                        null
+                                    ) :
+                                        <>
+                                            <button
+                                                onClick={() => handleAcceptBooking(order._id)}
+                                                disabled={processing[order._id]}
+                                            >
+                                                Accept
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeclineBooking(order._id)}
+                                                disabled={processing[order._id]}
+                                            >
+                                                Decline
+                                            </button>
+                                        </>
+                                    }
+                                </div>
+
+                            </div>
                         ))
                     ) : (
                         <div className="orders-off">
-                        <p >No orders found.</p>
+                            <p>No orders found.</p>
                         </div>
                     )}
                 </div>
