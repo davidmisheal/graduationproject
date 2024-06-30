@@ -200,8 +200,8 @@ htmml {
 	color: red;
 	font-weight: bold;
 	font-size: 12px;
-  }
-  
+}
+
 
 .first-home-part-writings-p {
 	width: 60%;
@@ -924,6 +924,38 @@ htmml {
 	transform: translateY(0);
 }
 
+.places-filtersearch {
+	display: flex;
+	flex-direction: row;
+	justify-content: start;
+	align-items: center;
+	column-gap: 10px;
+}
+
+.search-container input {
+	padding: 10px 50px;
+	box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+	text-align: left;
+	border: #d5d4d4 1px solid;
+	border-radius: 5px;
+}
+
+.search-container button {
+	position: relative;
+	right: 40px;
+	background-color: white;
+	border: 1px solid gainsboro;
+	border-radius: 100%;
+	padding: 5px 8px;
+	transition: all 0.2s ease-in-out;
+	cursor: pointer;
+}
+.search-container button:hover{
+	background-color: black;
+}
+.search-container button:hover i{
+	color: white;
+}
 .card-rec-hist img {
 	transition: transform 0.3s ease-in-out;
 }
@@ -1112,7 +1144,7 @@ htmml {
 .password-popup {
 	background-image: url('../src/imgs/signin-back.jpg');
 	background-repeat: no-repeat;
-	background-size: 1200px;
+	background-size: 1300px;
 	width: 60%;
 	position: relative;
 	margin: 0;
@@ -1513,6 +1545,7 @@ htmml {
 	align-items: center;
 	gap: 60px;
 }
+
 .button {
 	width: 100%;
 	text-align: center;
@@ -1535,6 +1568,7 @@ htmml {
 	color: #E1E8EE;
 	cursor: pointer;
 }
+
 .info-button {
 	display: flex;
 	flex-direction: column;
@@ -1572,22 +1606,26 @@ htmml {
 	align-items: center;
 	row-gap: 30px;
 }
-.info-span{
+
+.info-span {
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 }
-.info-title{
+
+.info-title {
 	font-size: 10px;
 	color: gray;
 }
-.info-details{
+
+.info-details {
 	font-size: 20px;
 	color: black;
 	font-weight: 600;
 }
-.info-ratings{
+
+.info-ratings {
 	display: flex;
 	flex-direction: row;
 	column-gap: 5px;
@@ -1595,6 +1633,7 @@ htmml {
 	align-items: center;
 	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
 .staff-div h3 {
 	margin-bottom: 10px;
 	font-size: 20px;
@@ -1869,9 +1908,10 @@ input[type="file"] {
 }
 
 /*-----------my trips------------*/
-.mytrips-off{
+.mytrips-off {
 	height: 50vh;
 }
+
 .mytrips {
 	width: 80%;
 	display: flex;
@@ -2047,7 +2087,8 @@ input[type="file"] {
 	align-items: center;
 }
 
-.cancel-overlay,.picktour-overlay {
+.cancel-overlay,
+.picktour-overlay {
 	position: absolute;
 	width: 100%;
 	height: 1300px;
@@ -2197,10 +2238,12 @@ input[type="file"] {
 	align-items: start;
 	row-gap: 10px;
 }
-.viewmore-third span{
+
+.viewmore-third span {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 }
+
 /* Tour Guide List */
 .tour-guide-list {
 	margin-top: 20px;
@@ -2223,9 +2266,10 @@ input[type="file"] {
 	transform: scale(1);
 }
 
-.filtertour-body{
+.filtertour-body {
 	background-color: none;
 }
+
 .filtertour-element {
 	display: flex;
 	justify-content: space-between;
@@ -2442,7 +2486,8 @@ li {
 	border: 1px solid #ccc;
 	border-radius: 5px;
 }
-.tour-guide-list{
+
+.tour-guide-list {
 	position: absolute;
 	display: flex;
 	flex-direction: column;
@@ -2458,16 +2503,19 @@ li {
 	transform: translateY(0);
 	opacity: 1;
 }
-.tour-guide-list i{
+
+.tour-guide-list i {
 	position: relative;
 	left: 380px;
 	color: gray;
 	transition: all 0.2s ease-in-out;
 	cursor: pointer;
 }
-.tour-guide-list i:hover{
+
+.tour-guide-list i:hover {
 	color: black;
 }
+
 /*------requests--------*/
 .requests {
 	display: flex;
@@ -2580,9 +2628,10 @@ h5 {
 }
 
 /*--------myorders---------*/
-.orders-off{
+.orders-off {
 	height: 50vh;
 }
+
 .myorders {
 	width: 90%;
 	display: flex;
@@ -2634,5 +2683,3 @@ p,
 	margin: 0;
 	padding: 0;
 }
-
-

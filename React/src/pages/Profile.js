@@ -81,52 +81,64 @@ export default function Profile() {
     formData.append("photo", file);
 
     const userData = JSON.parse(window.localStorage.getItem('userData'));
-    const userType = userData?.data?.user?.role; // Assuming role indicates 'user' or 'tourguide'
 
     let apiUrl = "http://localhost:3000/api/v1/users/updateMe";
-    if (userType === "tourguide") {
-        apiUrl = `http://localhost:3000/api/v1/tours/`;
+    let updatedData = {};
+
+    if (userData.data.user) {
+      apiUrl = "http://localhost:3000/api/v1/users/updateMe";
+      updatedData = {
+        ...userData,
+        data: {
+          ...userData.data,
+          user: {
+            ...userData.data.user,
+            photo: null // this will be updated later
+          }
+        }
+      };
+    } else if (userData.data.tour) {
+      apiUrl = `http://localhost:3000/api/v1/tours/${userData.data.tour._id}`;
+      updatedData = {
+        ...userData,
+        data: {
+          ...userData.data,
+          tour: {
+            ...userData.data.tour,
+            imageCover: null // this will be updated later
+          }
+        }
+      };
     }
 
     try {
-        const response = await axios.patch(
-            apiUrl,
-            formData,
-            {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                    Authorization: `Bearer ${userData.token}`,
-                },
-            }
-        );
-        console.log("Photo upload response:", response);
-        alert("Profile photo updated successfully!");
-        setUserData({
-            ...userData,
-            data: {
-                ...userData.data,
-                user: { ...userData.data.user, photo: response.data.data.user.photo },
-            },
-        });
-        // Optionally update local storage or any other caching mechanism
-        window.localStorage.setItem(
-            "userData",
-            JSON.stringify({
-                ...userData,
-                data: {
-                    ...userData.data,
-                    user: {
-                        ...userData.data.user,
-                        photo: response.data.data.user.photo,
-                    },
-                },
-            })
-        );
+      const response = await axios.patch(
+        apiUrl,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      console.log("Photo upload response:", response);
+      alert("Profile photo updated successfully!");
+
+      if (userData.data.user) {
+        updatedData.data.user.photo = response.data.data.user.photo;
+      } else if (userData.data.tour) {
+        updatedData.data.tour.imageCover = response.data.data.tour.imageCover;
+      }
+
+      setUserData(updatedData);
+
+      window.localStorage.setItem("userData", JSON.stringify(updatedData));
     } catch (error) {
-        console.error("Error uploading photo:", error);
-        alert("Failed to update profile photo");
+      console.error("Error uploading photo:", error);
+      alert("Failed to update profile photo");
     }
-};
+  };
 
 
   if (!userData) {
