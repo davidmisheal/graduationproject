@@ -21,12 +21,35 @@ exports.createBooking = catchAsync(async (req, res, next) => {
       message: 'Sorry, the tour is already booked on this date'
     });
   }
+  // Ensure 'places' is an array and not undefined or a single value
+  if (!Array.isArray(places)) {
+    return next(new AppError('Places must be an array', 400));
+  }
+
+  // Convert date to the start of the day to avoid time conflicts
+  const bookingDate = new Date(date);
+  bookingDate.setHours(0, 0, 0, 0);
+
+  // Check if there's already a booking for the same place by this user on the same date
+  const placeBookingConflict = await Booking.findOne({
+    user: req.user._id,
+    places: { $in: places },
+    date: bookingDate
+  });
+
+  if (placeBookingConflict) {
+    return res.status(403).json({
+      status: 'fail',
+      message:
+        'You have already booked a place at this location on the selected date.'
+    });
+  }
 
   const newBooking = await Booking.create({
     tour,
     user: req.user._id,
     places,
-    date,
+    date: bookingDate,
     price
   });
 
@@ -37,15 +60,18 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     }
   });
 });
-
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);
 
 exports.updateBooking = catchAsync(async (req, res, next) => {
-  const updatedBooking = await Booking.findByIdAndUpdate(req.params.bookingId, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const updatedBooking = await Booking.findByIdAndUpdate(
+    req.params.bookingId,
+    req.body,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
 
   if (!updatedBooking) {
     return next(new AppError('No booking found with that ID', 404));
@@ -54,8 +80,8 @@ exports.updateBooking = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      booking: updatedBooking,
-    },
+      booking: updatedBooking
+    }
   });
 });
 exports.deleteBooking = catchAsync(async (req, res, next) => {

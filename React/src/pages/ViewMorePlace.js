@@ -23,7 +23,9 @@ export default function ViewMore() {
   useEffect(() => {
     const fetchPlaceById = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/v1/place/${id}`);
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/place/${id}`
+        );
         if (response.data && response.data.data) {
           setPlace(response.data.data); // Ensure this matches your API response structure
           setUpdatedPrice(response.data.data.price); // Set the initial price
@@ -55,9 +57,19 @@ export default function ViewMore() {
   }, [place]);
 
   const handleAddToTrip = async () => {
-    const userData = JSON.parse(window.localStorage.getItem('userData'));
+    const userData = JSON.parse(window.localStorage.getItem("userData"));
     if (!userData || !userData.token) {
       console.error("User data or token is missing");
+      return;
+    }
+
+    if (!selectedDate) {
+      alert("Please select a date before booking.");
+      return;
+    }
+
+    if (!bookedTourGuide) {
+      alert("Please select a tour guide before booking.");
       return;
     }
 
@@ -65,30 +77,42 @@ export default function ViewMore() {
     const totalPrice = place.price + tourPrice;
 
     try {
-      const bookingDetails = await axios.post('http://localhost:3000/api/v1/bookings', {
-        tour: bookedTourGuide ? bookedTourGuide._id : null,
-        places: place ? [place._id] : [], // Ensure places is an array of place IDs
-        date: selectedDate,
-        price: totalPrice
-      }, {
-        headers: {
-          Authorization: `Bearer ${userData.token}`
+      const bookingDetails = await axios.post(
+        "http://localhost:3000/api/v1/bookings",
+        {
+          tour: bookedTourGuide ? bookedTourGuide._id : null,
+          places: place ? [place._id] : [], // Ensure places is an array of place IDs
+          date: selectedDate,
+          price: totalPrice,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userData.token}`,
+          },
         }
-      });
+      );
+
       console.log("Booking response:", bookingDetails);
-      navigate('/mytrips', { state: place });
+      navigate("/mytrips", { state: place });
     } catch (error) {
       console.error("Error creating booking:", error);
+      if (error.response && error.response.status === 403) {
+        alert(error.response.data.message);
+      } else {
+        alert(
+          "An error occurred while creating the booking. Please try again."
+        );
+      }
     }
   };
 
   const handlePickTourGuide = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/v1/tours');
+      const response = await axios.get("http://localhost:3000/api/v1/tours");
       const toursData = response.data.data.data || [];
 
       // Check if place.location exists and is a string
-      if (!place || !place.location || typeof place.location !== 'string') {
+      if (!place || !place.location || typeof place.location !== "string") {
         console.error("Invalid place location:", place.location);
         return;
       }
@@ -97,7 +121,7 @@ export default function ViewMore() {
 
       const filteredTours = toursData.filter((tour) => {
         // Check if tour.location exists and is a string
-        if (!tour.location || typeof tour.location !== 'string') {
+        if (!tour.location || typeof tour.location !== "string") {
           console.error("Invalid tour location:", tour.location);
           return false;
         }
@@ -128,21 +152,19 @@ export default function ViewMore() {
     <>
       <Nav />
       <div className="viewmore">
-        <Category_part img={place.img} h2={place.name} h3={place.location + " , Egypt"} />
+        <Category_part
+          img={place.img}
+          h2={place.name}
+          h3={place.location + " , Egypt"}
+        />
         <div className="viewmore-body">
           <Gallery imgs={place.images} />
           <div className="viewmore-second">
             <div className="viewmore-second-left visible">
               <h3>Description</h3>
-              <p className="viewmore-second-desc">
-                {place.description}
-              </p>
-              <p className="viewmore-second-desc">
-                {place.description2}
-              </p>
-              <p className="viewmore-second-desc">
-                {place.description3}
-              </p>
+              <p className="viewmore-second-desc">{place.description}</p>
+              <p className="viewmore-second-desc">{place.description2}</p>
+              <p className="viewmore-second-desc">{place.description3}</p>
               <div className="viewmore-third visible">
                 <span>
                   <DatePicker
@@ -152,14 +174,28 @@ export default function ViewMore() {
                     placeholderText="Select a date"
                     className="datepicker-input"
                   />
-                  <button className="button-28" role="button" onClick={handlePickTourGuide}>Pick a TourGuide</button>
+                  <button
+                    className="button-28"
+                    role="button"
+                    onClick={handlePickTourGuide}
+                  >
+                    Pick a TourGuide
+                  </button>
                 </span>
-                <button className="button-28" role="button" onClick={handleAddToTrip}>Add</button>
+                <button
+                  className="button-28"
+                  role="button"
+                  onClick={handleAddToTrip}
+                >
+                  Add
+                </button>
               </div>
             </div>
             <div className="viewmore-second-right">
               <span className="viewmore-second-right-counters">
-                <i className="fa-solid fa-location-dot fa-xl"></i> <p>1000</p> | <i className="fa-solid fa-heart fa-xl"></i> <p>{place.favoriteCount}</p>
+                <i className="fa-solid fa-location-dot fa-xl"></i> <p>1000</p> |{" "}
+                <i className="fa-solid fa-heart fa-xl"></i>{" "}
+                <p>{place.favoriteCount}</p>
               </span>
               <span className="viewmore-second-right-season">
                 <h4> Recommended Season: </h4>
@@ -170,36 +206,19 @@ export default function ViewMore() {
               <span className="viewmore-second-right-safety">
                 <h4>Safety Tips:</h4>
                 <ul>
-                  <li>
-                    Stay Aware of Your Surroundings:
-                  </li>
-                  <li>
-                    Stay Hydrated
-                  </li>
-                  <li>
-                    Dress Modestly
-                  </li>
-                  <li>
-                    Beware of Scams
-                  </li>
+                  <li>Stay Aware of Your Surroundings:</li>
+                  <li>Stay Hydrated</li>
+                  <li>Dress Modestly</li>
+                  <li>Beware of Scams</li>
                 </ul>
               </span>
               <span className="viewmore-second-right-safety">
-                <h4>Tips and Tricks:
-                </h4>
+                <h4>Tips and Tricks:</h4>
                 <ul>
-                  <li>
-                    Bargain Politely
-                  </li>
-                  <li>
-                    Explore Side Streets
-                  </li>
-                  <li>
-                    Be Prepared to Walk
-                  </li>
-                  <li>
-                    Check Store Hours
-                  </li>
+                  <li>Bargain Politely</li>
+                  <li>Explore Side Streets</li>
+                  <li>Be Prepared to Walk</li>
+                  <li>Check Store Hours</li>
                 </ul>
               </span>
             </div>
@@ -208,10 +227,13 @@ export default function ViewMore() {
           {showTours && (
             <>
               <div className="picktour-overlay"></div>
-              <div className={`tour-guide-list ${isVisible ? 'scale-in' : ''}`}>
-                <i className="fa-solid fa-x fa-xs" onClick={() => {
-                  setShowTours(false);
-                }}></i>
+              <div className={`tour-guide-list ${isVisible ? "scale-in" : ""}`}>
+                <i
+                  className="fa-solid fa-x fa-xs"
+                  onClick={() => {
+                    setShowTours(false);
+                  }}
+                ></i>
                 <h3>Select a Tour Guide</h3>
                 <div className="filtertour-body">
                   {tours.length > 0 ? (
@@ -222,14 +244,18 @@ export default function ViewMore() {
                           <div>
                             <h4>{tour.name}</h4>
                             <p className="requests-email">{tour.email}</p>
-                            <p className="requests-price">Price: <strong>{tour.price} L.E</strong></p>
+                            <p className="requests-price">
+                              Price: <strong>{tour.price} L.E</strong>
+                            </p>
                           </div>
                           <div>
                             <h5>Location:</h5>
                             <p className="requests-status">{tour.location}</p>
                           </div>
                           <div className="requests-button">
-                            <button onClick={() => handleBookTourGuide(tour)}>Book</button>
+                            <button onClick={() => handleBookTourGuide(tour)}>
+                              Book
+                            </button>
                           </div>
                         </div>
                       </React.Fragment>
@@ -243,7 +269,7 @@ export default function ViewMore() {
           )}
         </div>
       </div>
-      <Footer name='footer-main' />
+      <Footer name="footer-main" />
     </>
   );
 }
