@@ -175,6 +175,37 @@ exports.approveTour = catchAsync(async (req, res) => {
   res.status(200).json({ status: 'success', data: { updatedTour } });
 });
 
+exports.updateTour = catchAsync(async (req, res, next) => {
+  const filteredBody = {
+    name: req.body.name,
+    price: req.body.price,
+    summary: req.body.summary,
+    description: req.body.description,
+    imageCover: req.body.imageCover,
+    images: req.body.images
+  };
+
+  const updatedTour = await Tour.findByIdAndUpdate(
+    req.params.id,
+    filteredBody,
+    {
+      new: true,
+      runValidators: true
+    }
+  );
+
+  if (!updatedTour) {
+    return next(new AppError('No tour found with that ID', 404));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: updatedTour
+    }
+  });
+});
+
 exports.updateTourPassword = catchAsync(async (req, res, next) => {
   const tourId = req.params.id; // Get the tour ID from the route parameter
   const tour = await Tour.findById(tourId); // Find the tour directly using the provided ID
@@ -213,7 +244,6 @@ exports.aliasTopTours = (req, res, next) => {
 exports.getAllTours = factory.getAll(Tour);
 exports.getTour = factory.getOne(Tour, { path: 'reviews' });
 exports.createTour = factory.createOne(Tour);
-exports.updateTour = factory.updateOne(Tour);
 exports.deleteTour = factory.deleteOne(Tour);
 
 exports.getTourStats = catchAsync(async (req, res, next) => {
