@@ -161,11 +161,12 @@ export default function MyOrders() {
                                         </button>
                                     </div>
                                 </div>
-                                <hr />
                             </>
                         ))
                     ) : (
-                        <p>No orders found.</p>
+                        <div className="orders-off">
+                        <p >No orders found.</p>
+                        </div>
                     )}
                 </div>
             </div>

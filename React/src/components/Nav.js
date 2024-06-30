@@ -46,8 +46,8 @@ export default function Nav(props) {
     // Clear local storage and reload the page to ensure state is fully reset
     window.localStorage.removeItem('userData');
     window.localStorage.setItem('isLoggedIn', false);
-    window.location.reload();
     navigate("/")
+    window.location.reload();
   };
 
   return (

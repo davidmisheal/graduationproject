@@ -48,21 +48,12 @@ function TourGuides() {
           {tours.map((tour) => (
             <TourGuide
               key={tour._id}
-              img={tour.imageCover}
-              name={tour.name}
-              brief={tour.summary}
-              city={
-                tour.location ? (
-                  <p>{tour.location}</p>
-                ) : (
-                  "Location not specified"
-                )
-              }
+              tour={tour}
             />
           ))}
         </div>
       </div>
-      <Footer />
+      <Footer name="footer-main"/>
     </>
   );
 }
