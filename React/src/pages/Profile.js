@@ -80,45 +80,54 @@ export default function Profile() {
     const formData = new FormData();
     formData.append("photo", file);
 
-    try {
-      const response = await axios.patch(
-        "http://localhost:3000/api/v1/users/updateMe",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${userData.token}`,
-          },
-        }
-      );
-      console.log("Photo upload response:", response);
-      alert("Profile photo updated successfully!");
-      setUserData({
-        ...userData,
-        data: {
-          ...userData.data,
-          user: { ...userData.data.user, photo: response.data.data.user.photo },
-        },
-      });
-      // Optionally update local storage or any other caching mechanism
-      window.localStorage.setItem(
-        "userData",
-        JSON.stringify({
-          ...userData,
-          data: {
-            ...userData.data,
-            user: {
-              ...userData.data.user,
-              photo: response.data.data.user.photo,
-            },
-          },
-        })
-      );
-    } catch (error) {
-      console.error("Error uploading photo:", error);
-      alert("Failed to update profile photo");
+    const userData = JSON.parse(window.localStorage.getItem('userData'));
+    const userType = userData?.data?.user?.role; // Assuming role indicates 'user' or 'tourguide'
+
+    let apiUrl = "http://localhost:3000/api/v1/users/updateMe";
+    if (userType === "tourguide") {
+        apiUrl = `http://localhost:3000/api/v1/tours/`;
     }
-  };
+
+    try {
+        const response = await axios.patch(
+            apiUrl,
+            formData,
+            {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                    Authorization: `Bearer ${userData.token}`,
+                },
+            }
+        );
+        console.log("Photo upload response:", response);
+        alert("Profile photo updated successfully!");
+        setUserData({
+            ...userData,
+            data: {
+                ...userData.data,
+                user: { ...userData.data.user, photo: response.data.data.user.photo },
+            },
+        });
+        // Optionally update local storage or any other caching mechanism
+        window.localStorage.setItem(
+            "userData",
+            JSON.stringify({
+                ...userData,
+                data: {
+                    ...userData.data,
+                    user: {
+                        ...userData.data.user,
+                        photo: response.data.data.user.photo,
+                    },
+                },
+            })
+        );
+    } catch (error) {
+        console.error("Error uploading photo:", error);
+        alert("Failed to update profile photo");
+    }
+};
+
 
   if (!userData) {
     return (

@@ -189,7 +189,6 @@ export default function Requests() {
           {pendingTours.length > 0 ? (
             pendingTours.map((tour) => (
               <React.Fragment key={tour._id}>
-                <hr />
                 <div className="requests-element">
                   <div>
                     {tour.imageCover && (
@@ -239,12 +238,17 @@ export default function Requests() {
           {cancellationRequests.length > 0 ? (
             cancellationRequests.map((request) => (
               <React.Fragment key={request._id}>
-                <hr />
                 <div className="cancel-element">
                   <div>
-                    <h4>Booking ID: {request.booking._id}</h4>
+                    <h4>
+                      Booking ID:{" "}
+                      {request.booking ? request.booking._id : "N/A"}
+                    </h4>
                     <p>
-                      User: {request.user.name} ({request.user.email})
+                      User:{" "}
+                      {request.user
+                        ? `${request.user.name} (${request.user.email})`
+                        : "N/A"}
                     </p>
                     <p>Reason: {request.reason}</p>
                   </div>

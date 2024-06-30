@@ -32,9 +32,6 @@ function App() {
   const loggedIn = window.localStorage.getItem("isLoggedIn");
   const userData = window.localStorage.getItem("userData");
   console.log(loggedIn, "login");
-  useEffect(() => {
-    initLightboxJS("Insert your License Key here", "Insert plan type here");
-  }, []);
   return (
     <ErrorBoundary>
       <Router>

@@ -239,7 +239,6 @@ export default function ViewMore() {
                   {tours.length > 0 ? (
                     tours.map((tour) => (
                       <React.Fragment key={tour._id}>
-                        <hr />
                         <div className="filtertour-element">
                           <div>
                             <h4>{tour.name}</h4>

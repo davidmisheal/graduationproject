@@ -248,7 +248,9 @@ export default function MyTrips() {
                             </div>
                         </>
                     ) : (
-                        "No confirmed trips."
+                        <div className="mytrips-off">
+                        No confirmed trips.
+                        </div>
                     ) : (
                         "Sign in first!"
                     )}
@@ -327,7 +329,9 @@ export default function MyTrips() {
                             </div>
                         </>
                     ) : (
-                        "No pending trips."
+                        <div className="mytrips-off">
+                        No pending trips.
+                        </div>
                     ) : (
                         "Sign in first!"
                     )}
