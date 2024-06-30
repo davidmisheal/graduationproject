@@ -196,6 +196,13 @@ htmml {
 
 }
 
+.error-message {
+	color: red;
+	font-weight: bold;
+	font-size: 12px;
+  }
+  
+
 .first-home-part-writings-p {
 	width: 60%;
 	margin: 0 auto;

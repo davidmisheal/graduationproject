@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useUser } from "../context/UserContext";
 import axios from "axios";
 
@@ -6,25 +6,33 @@ export default function ChangePassword({ email }) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
+  const [errors, setErrors] = useState({});
   const { user } = useUser();
 
-  useEffect(() => {
-    console.log("User in ChangePassword:", user);
-  }, [user]);
-
-  const handleChangePassword = async () => {
-    if (!user || !user.token) {
-      alert("User is not logged in or token is not available");
-      return;
+  const validateForm = () => {
+    const newErrors = {};
+    if (!currentPassword) {
+      newErrors.currentPassword = "Current password is required.";
+    }
+    if (!newPassword) {
+      newErrors.newPassword = "New password is required.";
+    } else if (newPassword.length < 6) {
+      newErrors.newPassword = "Password must be at least 6 characters long.";
     }
     if (newPassword !== confirmNewPassword) {
-      alert("New passwords do not match");
-      return;
+      newErrors.confirmNewPassword = "Passwords do not match.";
+    }
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChangePassword = async () => {
+    if (!validateForm()) {
+      return; // Stop the function if validation fails
     }
 
     try {
-      console.log("Token being used:", user.token);
-      await axios.patch(
+      const response = await axios.patch(
         "http://localhost:3000/api/v1/users/updateMyPassword",
         {
           passwordCurrent: currentPassword,
@@ -37,34 +45,12 @@ export default function ChangePassword({ email }) {
           },
         }
       );
-
       alert("Password updated successfully!");
     } catch (error) {
       console.error("Error updating password:", error);
-      alert("Failed to update password.");
+      alert("Failed to update password.\nCurrent Password is not right");
     }
   };
-
-  const handleForgotPassword = async () => {
-    if (!email) {
-      alert("User email is not available");
-      return;
-    }
-
-    try {
-      await axios.post("http://localhost:3000/api/v1/users/forgotPassword", {
-        email,
-      });
-      alert("Password reset email sent!");
-    } catch (error) {
-      console.error("Error sending password reset email:", error);
-      alert("Failed to send password reset email.");
-    }
-  };
-  useEffect(() => {
-    console.log("Email in ChangePassword:", email);
-    console.log("User in ChangePassword:", user);
-  }, [user, email]);
 
   return (
     <div className="change-main">
@@ -74,7 +60,11 @@ export default function ChangePassword({ email }) {
           type="password"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
+          required
         />
+        {errors.currentPassword && (
+          <div style={{ color: "red" }}>{errors.currentPassword}</div>
+        )}
       </label>
       <label>
         <p>New Password:</p>
@@ -82,7 +72,11 @@ export default function ChangePassword({ email }) {
           type="password"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
+          required
         />
+        {errors.newPassword && (
+          <div style={{ color: "red" }}>{errors.newPassword}</div>
+        )}
       </label>
       <label>
         <p>Re-write New Password:</p>
@@ -90,7 +84,11 @@ export default function ChangePassword({ email }) {
           type="password"
           value={confirmNewPassword}
           onChange={(e) => setConfirmNewPassword(e.target.value)}
+          required
         />
+        {errors.confirmNewPassword && (
+          <div style={{ color: "red" }}>{errors.confirmNewPassword}</div>
+        )}
       </label>
       <button onClick={handleChangePassword}>Change Password</button>
     </div>
