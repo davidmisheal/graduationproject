@@ -175,7 +175,7 @@ export default function ViewMore() {
               <h3>Description</h3>
               <p className="viewmore-second-desc">{place.description}</p>
               <p className="viewmore-second-desc">{place.description2}</p>
-              <p className="viewmore-second-desc">{place.description3}</p>
+              <p className="viewmore-second-desc1">{place.description3}</p>
               <div className="viewmore-third visible">
                 <span>
                   <DatePicker

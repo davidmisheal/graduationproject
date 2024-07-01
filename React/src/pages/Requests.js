@@ -157,7 +157,7 @@ export default function Requests() {
 
       const response = await axios.patch(
         `http://localhost:3000/api/v1/cancellation-requests/${requestId}`,
-        { status: "declined" },
+        { status: "rejected" },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -169,7 +169,7 @@ export default function Requests() {
         setCancellationRequests(
           cancellationRequests.map((request) =>
             request._id === requestId
-              ? { ...request, status: "declined" }
+              ? { ...request, status: "rejected" }
               : request
           )
         );
@@ -259,7 +259,7 @@ export default function Requests() {
                   <div className="requests-button">
                     <button
                       onClick={() => handleApproveCancellation(request._id)}
-                      disabled={request.status === "approved"}
+                      disabled={request.status === "approved" || request.status==="rejected"}
                       style={{
                         opacity: request.status === "approved" ? 0.5 : 1,
                       }}
@@ -268,9 +268,9 @@ export default function Requests() {
                     </button>
                     <button
                       onClick={() => handleDeclineCancellation(request._id)}
-                      disabled={request.status === "approved"}
+                      disabled={request.status === "approved" || request.status==="rejected"}
                       style={{
-                        opacity: request.status === "approved" ? 0.5 : 1,
+                        opacity: request.status === "rejected" ? 0.5 : 1,
                       }}
                     >
                       Decline

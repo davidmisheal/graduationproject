@@ -3,8 +3,10 @@ import Nav from "../components/Nav";
 import Footer from "../components/Footer";
 import { useUser } from "../context/UserContext";
 import axios from "axios";
-
+import Floatnav from "../components/Float-nav";
+import { Scroll } from "../func/Scroll";
 export default function MyTrips() {
+  const isScrolled = Scroll(250);
   const { user, setUser, logout } = useUser();
   const [bookings, setBookings] = useState([]);
   const [places, setPlaces] = useState({});
@@ -226,7 +228,7 @@ export default function MyTrips() {
 
   return (
     <>
-      <Nav />
+      {isScrolled ? <Floatnav /> : <Nav />}
       <div className="mytrips">
         <h2 className="mytrips-title">My Trips</h2>
         <div className="mytrips-confirmed">
@@ -325,28 +327,33 @@ export default function MyTrips() {
                   ))}
                 </div>{" "}
                 {reviewRequest && (
-                  <div className="review-request-form">
-                    <h4>Submit Review</h4>
-                    <textarea
-                      value={review}
-                      onChange={(e) => setReview(e.target.value)}
-                      placeholder="Enter your review"
-                    />
-                    <select
-                      value={rating}
-                      onChange={(e) => setRating(e.target.value)}
-                    >
-                      {[1, 2, 3, 4, 5].map((ratingValue) => (
-                        <option key={ratingValue} value={ratingValue}>
-                          {ratingValue} Star{ratingValue > 1 && "s"}
-                        </option>
-                      ))}
-                    </select>
-                    <button onClick={handleSubmitReviewRequest}>Submit</button>
-                    <button onClick={() => setReviewRequest(null)}>
-                      Close
-                    </button>
-                  </div>
+                  <>
+                    <div className="review-request-overlay"></div>
+                    <div className="review-request-form">
+                      <h4>Submit Review</h4>
+                      <textarea
+                        value={review}
+                        onChange={(e) => setReview(e.target.value)}
+                        placeholder="Enter your review"
+                      />
+                      <select
+                        value={rating}
+                        onChange={(e) => setRating(e.target.value)}
+                      >
+                        {[1, 2, 3, 4, 5].map((ratingValue) => (
+                          <option key={ratingValue} value={ratingValue}>
+                            {ratingValue} Star{ratingValue > 1 && "s"}
+                          </option>
+                        ))}
+                      </select>
+                      <button onClick={handleSubmitReviewRequest}>
+                        Submit
+                      </button>
+                      <button onClick={() => setReviewRequest(null)}>
+                        Close
+                      </button>
+                    </div>
+                  </>
                 )}
               </>
             ) : (

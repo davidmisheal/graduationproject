@@ -562,8 +562,8 @@ export default function SignLogin() {
                       onChange={handleImageChange}
                       style={{
                         display: "block",
-                        width: "100%",
-                        padding: "8px",
+                        width: "200px",
+                        padding: "10px",
                         margin: "10px 0",
                       }}
                     />
