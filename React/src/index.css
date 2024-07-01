@@ -167,7 +167,7 @@ htmml {
 .background-image {
 	position: relative;
 	filter: blur(0px) brightness(70%);
-	width: 100%;
+	width: 1520px;
 }
 
 .first-home-part-writings {
@@ -950,12 +950,15 @@ htmml {
 	transition: all 0.2s ease-in-out;
 	cursor: pointer;
 }
-.search-container button:hover{
+
+.search-container button:hover {
 	background-color: black;
 }
-.search-container button:hover i{
+
+.search-container button:hover i {
 	color: white;
 }
+
 .card-rec-hist img {
 	transition: transform 0.3s ease-in-out;
 }
@@ -2102,7 +2105,8 @@ input[type="file"] {
 	transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
 }
 
-.cancel-request-form,.review-form {
+.cancel-request-form,
+.review-request-form {
 	position: absolute;
 	display: flex;
 	flex-direction: column;
@@ -2127,7 +2131,9 @@ input[type="file"] {
 }
 
 .cancel-request-form input,
-.cancel-request-form textarea ,.review-form input ,textarea {
+.cancel-request-form textarea,
+.review-form input,
+textarea {
 	width: 60%;
 	padding: 10px;
 	margin-bottom: 15px;
@@ -2153,6 +2159,42 @@ input[type="file"] {
 	cursor: not-allowed;
 }
 
+.review-request-form {
+	position: absolute;
+	top: 500px;
+	left: 500px;
+	margin: auto;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	row-gap: 10px;
+	z-index: 3;
+	background: white;
+	padding: 20px;
+	border-radius: 10px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+	width: 90%;
+	max-width: 500px;
+	transition: transform 0.3s ease, opacity 0.3s ease;
+	transform: translateY(0);
+	opacity: 1;height: 300px;
+}
+.review-request-overlay{
+	position: absolute;
+	width: 100%;
+	height: 1300px;
+	top: 0;
+	right: 0;
+	z-index: 3;
+	backdrop-filter: blur(2px) brightness(0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.5);
+	/* Add a semi-transparent background for better focus */
+	transition: backdrop-filter 0.3s ease, background-color 0.3s ease;
+}
 /*---------viewmore---------*/
 /* Gallery.css */
 .gallery {
@@ -2188,21 +2230,6 @@ input[type="file"] {
 	box-shadow: inset 0 0 0 2px rgb(17, 17, 17);
 	/* Inner border using box-shadow */
 	filter: none;
-}
-
-
-@media (max-width: 768px) {
-	.gallery-link {
-		width: 45%;
-		/* Adjust width for smaller screens */
-	}
-}
-
-@media (max-width: 480px) {
-	.gallery-link {
-		width: 100%;
-		/* Full width on very small screens */
-	}
 }
 
 .viewmore-first img {
@@ -2268,14 +2295,6 @@ input[type="file"] {
 
 .filtertour-body {
 	background-color: none;
-}
-
-.filtertour-element {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
-	padding: 10px 0;
-	border-bottom: 1px solid rgb(235, 235, 235);
 }
 
 .filtertour-element h4 {
@@ -2349,7 +2368,8 @@ input[type="file"] {
 	justify-content: center;
 }
 
-.viewmore-second-desc {
+.viewmore-second-desc,
+.viewmore-second-desc1 {
 	margin-top: 20px;
 }
 
@@ -2610,7 +2630,8 @@ h5 {
 
 .requests-button button,
 .checkout-body button,
-.cancel-request-form button ,.review-form button{
+.cancel-request-form button,
+.review-request-form button {
 	width: 150px;
 	padding: 10px;
 	background-color: white;
@@ -2622,7 +2643,8 @@ h5 {
 
 .requests-button button:hover,
 .checkout-body button:hover,
-.cancel-request-form button:hover , .review-form button:hover{
+.cancel-request-form button:hover,
+.review-request-form button:hover {
 	background-color: black;
 	color: white;
 }

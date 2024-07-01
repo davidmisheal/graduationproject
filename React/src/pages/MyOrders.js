@@ -132,10 +132,10 @@ export default function MyOrders() {
                         orders.map((order) => (
                             <div key={order._id} className="myorders-element">
                                 <div className="myorders-element-info">
-                                    <h3>Booking ID: {order._id}</h3>
+                                    <h3>Booking ID: <p>{order._id}</p></h3>
                                     <div className="myorders-element-info-user">
                                         {users[order.user._id] ? (
-                                            <p>Username: {users[order.user._id].name}</p>
+                                            <p><strong>Username:</strong> {users[order.user._id].name}</p>
                                         ) : (
                                             <p>Loading...</p>
                                         )}
@@ -148,26 +148,29 @@ export default function MyOrders() {
                                         <strong>Price:</strong> {order.price} L.E
                                     </p>
                                     <div className="myorders-element-info-place">
-                                        <h4>Place:</h4>
                                         <ul>
                                             {order.places.map((place) => (
-                                                <li key={place._id}>
-                                                    {places[place._id]
-                                                        ? places[place._id].name
-                                                        : "Loading..."}
-                                                </li>
+                                                <>
+                                                    <h4>Place:</h4>
+
+                                                    <li key={place._id}>
+                                                        {places[place._id]
+                                                            ? places[place._id].name
+                                                            : "Loading..."}
+                                                    </li>
+                                                </>
                                             ))}
                                         </ul>
                                     </div>
                                 </div>
-                                <div>
+                                <div className="orderdiv-status">
                                     <h5>Status:</h5>
                                     <p className="order-status">{order.status}</p>
                                 </div>
                                 <div className="requests-button">
                                     {order.status === "confirmed" ? (
                                         <>
-                                            <button onClick={()=>{handleFinishBooking(order._id)}}>Done</button>
+                                            <button onClick={() => { handleFinishBooking(order._id) }}>Done</button>
                                         </>
                                     ) : order.status === "finished" ? (
                                         null
