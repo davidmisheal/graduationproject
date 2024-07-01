@@ -33,7 +33,8 @@ function TourGuide({ tour }) {
           </span>
           <span className="info-ratings">
             <i class="fa-solid fa-star fa-xs"></i>
-            <p>{tour.ratingsAverage} ({tour.ratingsQuantity})
+            <p> {tour.ratingsQuantity == 0 ?
+              0 : tour.ratingsAverage} ({tour.ratingsQuantity})
             </p>
           </span>
         </span>

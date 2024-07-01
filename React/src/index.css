@@ -1216,7 +1216,9 @@ htmml {
 	cursor: pointer;
 	transition: all 0.2s ease-in-out;
 }
-
+.password-exit i{
+	right: 10px;
+}
 .signup-exit i:hover,
 .password-exit i:hover {
 	color: white;
@@ -1824,7 +1826,10 @@ input[type="file"] {
 	color: black;
 	text-align: center;
 }
-
+.favorites-section h3{
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: center;
+}
 .favorites-list {
 	list-style-type: none;
 	padding: 0;

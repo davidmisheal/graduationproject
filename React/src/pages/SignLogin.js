@@ -312,17 +312,15 @@ export default function SignLogin() {
       <div className="signin-main">
         <span className="signin-options">
           <i
-            className={`fa-solid fa-user-tie fa-xl icon ${
-              userState === "tourguide" ? "active" : ""
-            }`}
+            className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""
+              }`}
             onClick={() => {
               handleOptionsSignIn("tourguide");
             }}
           ></i>
           <i
-            className={`fa-solid fa-user fa-xl icon ${
-              userState === "user" ? "active" : ""
-            }`}
+            className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""
+              }`}
             onClick={() => {
               handleOptionsSignIn("user");
             }}
@@ -428,17 +426,15 @@ export default function SignLogin() {
               </span>
               <span className="signup-options">
                 <i
-                  className={`fa-solid fa-user-tie fa-xl icon ${
-                    userState === "tourguide" ? "active" : ""
-                  }`}
+                  className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""
+                    }`}
                   onClick={() => {
                     handleOptionsSignUp("tourguide");
                   }}
                 ></i>
                 <i
-                  className={`fa-solid fa-user fa-xl icon ${
-                    userState === "user" ? "active" : ""
-                  }`}
+                  className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""
+                    }`}
                   onClick={() => {
                     handleOptionsSignUp("user");
                   }}

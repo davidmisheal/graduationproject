@@ -1541,4 +1541,16 @@
         background-color: black;
         color: white;
     }
+    .password-popup {
+        width: 70%;
+    }
+    .password-popup button{
+        width: 210px;
+    }
+    .card-rec-hist a {
+        padding: 10px;
+    }
+    .staff-div{
+        margin-top: 0px;
+    }
 }
