@@ -134,8 +134,14 @@ export default function MyTrips() {
     }
   };
 
-  const getTotalPrice = () => {
-    return selectedPlaces.reduce((total, place) => total + place.price, 0);
+  const getTotalPrice = (booking) => {
+    const tourId = booking.tour._id;
+    const tourPrice = tours[tourId] ? tours[tourId].price : 0;
+    const placePrice = booking.places.reduce(
+      (total, place) => total + place.price,
+      0
+    );
+    return tourPrice + placePrice;
   };
 
   const handleCheckout = async () => {
