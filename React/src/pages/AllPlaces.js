@@ -8,6 +8,7 @@ import ScreenSize from "../func/ScreenSize";
 import FloatNav from '../components/Float-nav';
 import CategoryPart from "../components/Category_part";
 import { useLocation } from "react-router-dom";
+import SearchComponent from "../components/SearchComponent";
 
 export default function All() {
     const isMobile = ScreenSize();
@@ -18,6 +19,7 @@ export default function All() {
     const [places, setPlaces] = useState([]);
     const [filteredData, setFilteredData] = useState([]);
     const location = useLocation();
+    const [searchQuery, setSearchQuery] = useState('');
 
     // Extract query parameter and initialize filter criteria
     useEffect(() => {
@@ -26,8 +28,8 @@ export default function All() {
         if (locationFilter) {
             setFilterCriteria(locationFilter.split(','));
         }
-        console.log(filterCriteria.length)
     }, [location]);
+
     // Fetch places from API
     useEffect(() => {
         const fetchPlaces = async () => {
@@ -44,17 +46,34 @@ export default function All() {
         fetchPlaces();
     }, []);
 
-    // Filter function
     useEffect(() => {
-        if (filterCriteria.length > 0) {
-            const filtered = places.filter(item =>
-                filterCriteria.some(criteria => item.location.toLowerCase().includes(criteria.toLowerCase()) || item.tourism.toLowerCase().includes(criteria.toLowerCase()))
-            );
+        const applyFilters = () => {
+            let filtered = places;
+
+            if (filterCriteria.length > 0) {
+                filtered = filtered.filter(item =>
+                    filterCriteria.some(criteria =>
+                        item.location.toLowerCase().includes(criteria.toLowerCase()) ||
+                        item.tourism.toLowerCase().includes(criteria.toLowerCase())
+                    )
+                );
+            }
+
+            if (searchQuery) {
+                filtered = filtered.filter(item =>
+                    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+                );
+            }
+
             setFilteredData(filtered);
-        } else {
-            setFilteredData(places); // Show all places if no filter is applied
-        }
-    }, [filterCriteria, places]);
+        };
+
+        applyFilters();
+    }, [filterCriteria, searchQuery, places]);
+
+    const handleSearch = (query) => {
+        setSearchQuery(query);
+    };
 
     // Handle dropdown change
     const handleDropdownChange = (e) => {
@@ -93,21 +112,24 @@ export default function All() {
                 <CategoryPart img='all.jpg' h2='Our Marvelous Egypt' h3="Discover places to visit!" />
             }
             <div className="places-whole">
-                <div className="filter-options">
-                    <select
-                        className="select-dropdown"
-                        value={filterCriteria[0] || ''}
-                        onChange={handleDropdownChange}
-                    >
-                        <option value="">All</option>
-                        <option value="Adventure">Adventure Tourism</option>
-                        <option value="Historical">Historical Tourism</option>
-                        <option value="Cultural">Cultural Tourism</option>
-                        <option value="Medical">Medical Tourism</option>
-                        <option value="Nautical">Nautical Tourism</option>
-                        <option value="Religious">Religious Tourism</option>
-                    </select>
-                </div>
+                <span className="places-filtersearch">
+                    <div className="filter-options">
+                        <select
+                            className="select-dropdown"
+                            value={filterCriteria[0] || ''}
+                            onChange={handleDropdownChange}
+                        >
+                            <option value="">All</option>
+                            <option value="Adventure">Adventure Tourism</option>
+                            <option value="Historical">Historical Tourism</option>
+                            <option value="Cultural">Cultural Tourism</option>
+                            <option value="Medical">Medical Tourism</option>
+                            <option value="Nautical">Nautical Tourism</option>
+                            <option value="Religious">Religious Tourism</option>
+                        </select>
+                    </div>
+                    <SearchComponent data={places} onSearch={handleSearch} />
+                </span>
                 {/* Display filtered data */}
                 {filteredData.map(place => (
                     <CardPlace

@@ -6,7 +6,12 @@ const reviewRouter = require('./../routes/reviewRoutes');
 const router = express.Router();
 // router.param('id', tourController.checkID);
 
-router.post('/signup', tourController.signupTour);
+router.post(
+  '/signup',
+  tourController.uploadTourImages,
+  tourController.resizeTourImages,
+  tourController.signupTour
+);
 
 // Route to fetch pending tours that haven't been approved yet
 router.get(

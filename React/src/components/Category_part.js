@@ -23,10 +23,15 @@ export default function CategoryPart(props) {
         src={require(`../imgs/${props.img}`)}
       />
       <span className="first-home-part-writings">
-        <h2 className="first-home-part-writings-h2">
-          {props.h2}
-        </h2>
-        <h3>{props.h3}</h3>
+        {
+          props.h2 ? <h2 className="first-home-part-writings-h2">
+            {props.h2}
+          </h2> : null
+        }
+        {props.h3 ?
+          <h3>{props.h3}</h3>
+          : null
+        }
       </span>
     </div>
   );

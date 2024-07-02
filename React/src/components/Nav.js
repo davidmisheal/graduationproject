@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Scroll } from "../func/Scroll";
 import '@fortawesome/fontawesome-free/css/all.css';
 import { useUser } from "../context/UserContext";
 import { useTour } from "../context/TourContext";
 
 export default function Nav(props) {
+  const navigate = useNavigate()
   const { user, userLogout } = useUser();
   const { Tour, tourLogout } = useTour();
   const isScrolled = Scroll(250);
@@ -19,7 +20,7 @@ export default function Nav(props) {
       if (userData.data.user) {
         setRole(userData.data.user.role);
       }
-      else if( userData.data.tour){
+      else if (userData.data.tour) {
         setRole(userData.data.tour.role);
       }
     }
@@ -45,6 +46,7 @@ export default function Nav(props) {
     // Clear local storage and reload the page to ensure state is fully reset
     window.localStorage.removeItem('userData');
     window.localStorage.setItem('isLoggedIn', false);
+    navigate("/")
     window.location.reload();
   };
 
@@ -118,10 +120,16 @@ export default function Nav(props) {
               <Link to={'/aboutus'} className="menunavlink">About Us</Link>
             </li>
             <li>
-              <Link to={'/blog'} className="menunavlink">Blog</Link>
-            </li>
+              {window.localStorage.getItem('isLoggedIn') === 'true' ? (
+                <Link to={'/'} className="menunavlink" onClick={handleLogout}>Log Out</Link>
+              ) : (
+                <Link to={'/signin'} className="menunavlink">Sign In</Link>
+              )}            
+              </li>
             <li>
-              <Link to={'/sign'} className="menunavlink">Log In</Link>
+              {role === 'admin' && <Link className="menunavlink" to={'/requests'}>Requests</Link>}
+              {role === 'user' && <Link className="menunavlink" to={'/mytrips'}>My Trips</Link>}
+              {role === 'tourguide' && <Link className="menunavlink" to={'/myorders'}>My Orders</Link>}
             </li>
           </ul>
         </div>

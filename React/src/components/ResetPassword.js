@@ -24,8 +24,10 @@ const ResetPassword = () => {
           passwordConfirm: inputs.passwordConfirm,
         }
       );
-      alert("Password successfully reset!");
-      navigate("/login"); // Navigate to login after success
+      alert(
+        "Password successfully reset!\nPlease Login with your new passwoed"
+      );
+      navigate("/"); // Navigate to login after success
     } catch (error) {
       console.error("Error resetting password:", error);
       alert("Failed to reset password.");

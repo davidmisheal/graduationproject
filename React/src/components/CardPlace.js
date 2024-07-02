@@ -25,6 +25,30 @@ export default function CardPlace({ place }) {
   }, [place]);
 
   useEffect(() => {
+    const checkIfFavorite = async () => {
+      try {
+        const userData = JSON.parse(window.localStorage.getItem('userData')); // Get the token from local storage
+        const response = await axios.get('http://localhost:3000/api/v1/users/favorites', {
+          headers: {
+            Authorization: `Bearer ${userData.token}`
+          },
+          withCredentials: true // Ensure cookies are sent with the request
+        });
+
+        const favoritePlaces = response.data.data.favorites;
+        const isFav = favoritePlaces.some(favPlace => favPlace._id === place._id);
+        setIsFavorite(isFav); // Update the favorite status
+      } catch (error) {
+        console.error('Error checking favorite status:', error);
+      }
+    };
+
+    if (place) {
+      checkIfFavorite();
+    }
+  }, [place]);
+
+  useEffect(() => {
     setIsVisible(true);
   }, []);
 
@@ -42,7 +66,7 @@ export default function CardPlace({ place }) {
       if (response.data.status === 'success') {
         setIsFavorite(true); // Update the favorite status
         console.log('Place added to favorites');
-        console.log("place:",response)
+        console.log("place:", response)
       }
     } catch (error) {
       console.error('Error adding place to favorites:', error);

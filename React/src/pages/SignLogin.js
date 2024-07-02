@@ -39,11 +39,16 @@ export default function SignLogin() {
     role: "",
     price: "",
     location: "",
+    formError: "",
   });
 
   const navigate = useNavigate();
   const { setUser } = useUser();
   const { setTour } = useTour();
+
+  const displayError = (error) => {
+    return error ? <p style={{ color: "red" }}>{error}</p> : null;
+  };
 
   useEffect(() => {
     const signUpButton = document.getElementById("signUp");
@@ -154,7 +159,8 @@ export default function SignLogin() {
         }));
       }
     } else if (userState === "tourguide") {
-      const { name, email, password, location, price, role } = formData;
+      const { name, email, password, location, price, role, imageCover } =
+        formData;
       let isValid = true;
       const newErrors = {
         name: "",
@@ -162,6 +168,8 @@ export default function SignLogin() {
         password: "",
         price: "",
         location: "",
+        imageCover: null,
+        formError: "",
       };
 
       if (!/^\S+@\S+\.\S+$/.test(email)) {
@@ -182,21 +190,28 @@ export default function SignLogin() {
         return;
       }
 
+      const data = new FormData();
+      data.append("name", name);
+      data.append("email", email);
+      data.append("password", password);
+      data.append("location", location);
+      data.append("price", price);
+      data.append("role", role);
+      data.append("imageCover", imageCover);
+
       try {
-        const response = await axios.post(
-          "http://localhost:3000/api/v1/tours/signup",
-          { name, email, password, location, price, role }
-        );
+        const response = await axios({
+          method: "post",
+          url: "http://localhost:3000/api/v1/tours/signup",
+          data: data,
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         setTour(response.data);
         console.log("Sign-up successful!", response.data);
-        navigate("/");
+        alert("Wait an Admin to confirm!");
+        navigate("/"); // Assuming redirect on successful signup
       } catch (error) {
         console.error("Sign-up failed!", error);
-        if (error.response) {
-          console.error("Error Response Data:", error.response.data);
-          console.error("Error Response Status:", error.response.status);
-          console.error("Error Response Headers:", error.response.headers);
-        }
         setErrors((prev) => ({
           ...prev,
           formError: error.response
@@ -204,6 +219,16 @@ export default function SignLogin() {
             : "An unknown error occurred",
         }));
       }
+    }
+  };
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (!file) {
+      setErrors((prev) => ({ ...prev, imageCover: "Photo is required" }));
+    } else {
+      setErrors((prev) => ({ ...prev, imageCover: "" })); // Clear any previous error if file is now selected
+      setFormData((prev) => ({ ...prev, imageCover: file }));
     }
   };
 
@@ -218,7 +243,7 @@ export default function SignLogin() {
         setErrors(newErrors);
         return;
       }
-
+      setErrors({});
       try {
         const response = await axios.post(
           "http://localhost:3000/api/v1/users/login",
@@ -234,9 +259,19 @@ export default function SignLogin() {
         navigate("/");
       } catch (error) {
         console.error("Login failed!", error);
+        // Determine the error message based on status code or response
+        let message = "An error occurred"; // Default error message
+        if (error.response) {
+          if (error.response.status === 401) {
+            // Unauthorized
+            message = "Incorrect email or password";
+          } else {
+            message = error.response.data.message || message;
+          }
+        }
         setErrors((prev) => ({
           ...prev,
-          formError: error.response.data.message || "An error occurred",
+          formError: message,
         }));
       }
     } else if (userState === "tourguide") {
@@ -248,7 +283,6 @@ export default function SignLogin() {
         setErrors(newErrors);
         return;
       }
-
       try {
         const response = await axios.post(
           "http://localhost:3000/api/v1/tours/login",
@@ -278,17 +312,15 @@ export default function SignLogin() {
       <div className="signin-main">
         <span className="signin-options">
           <i
-            className={`fa-solid fa-user-tie fa-xl icon ${
-              userState === "tourguide" ? "active" : ""
-            }`}
+            className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""
+              }`}
             onClick={() => {
               handleOptionsSignIn("tourguide");
             }}
           ></i>
           <i
-            className={`fa-solid fa-user fa-xl icon ${
-              userState === "user" ? "active" : ""
-            }`}
+            className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""
+              }`}
             onClick={() => {
               handleOptionsSignIn("user");
             }}
@@ -306,6 +338,9 @@ export default function SignLogin() {
                   setFormData({ ...formData, email: e.target.value })
                 }
               />
+              {errors.email && (
+                <div style={{ color: "red" }}>{errors.email}</div>
+              )}
               <input
                 type="password"
                 placeholder="Password"
@@ -315,11 +350,12 @@ export default function SignLogin() {
                 }
               />
               {errors.password && (
-                <p style={{ color: "red", fontWeight: "bold", fontSize: 12 }}>
-                  {errors.password}
-                </p>
+                <div style={{ color: "red" }}>{errors.password}</div>
               )}
               <button type="submit">Sign In</button>
+              {errors.formError && (
+                <div style={{ color: "red" }}>{errors.formError}</div>
+              )}
               <span className="signin-other">
                 <Link
                   onClick={() => {
@@ -349,6 +385,7 @@ export default function SignLogin() {
                   setFormData({ ...formData, email: e.target.value })
                 }
               />
+              {displayError(errors.email)}
               <input
                 type="password"
                 placeholder="Password"
@@ -389,17 +426,15 @@ export default function SignLogin() {
               </span>
               <span className="signup-options">
                 <i
-                  className={`fa-solid fa-user-tie fa-xl icon ${
-                    userState === "tourguide" ? "active" : ""
-                  }`}
+                  className={`fa-solid fa-user-tie fa-xl icon ${userState === "tourguide" ? "active" : ""
+                    }`}
                   onClick={() => {
                     handleOptionsSignUp("tourguide");
                   }}
                 ></i>
                 <i
-                  className={`fa-solid fa-user fa-xl icon ${
-                    userState === "user" ? "active" : ""
-                  }`}
+                  className={`fa-solid fa-user fa-xl icon ${userState === "user" ? "active" : ""
+                    }`}
                   onClick={() => {
                     handleOptionsSignUp("user");
                   }}
@@ -417,6 +452,9 @@ export default function SignLogin() {
                         setFormData({ ...formData, name: e.target.value })
                       }
                     />
+                    {errors.name && (
+                      <div style={{ color: "red" }}>{errors.name}</div>
+                    )}
                     <input
                       type="email"
                       placeholder="Email"
@@ -425,6 +463,9 @@ export default function SignLogin() {
                         setFormData({ ...formData, email: e.target.value })
                       }
                     />
+                    {errors.email && (
+                      <div style={{ color: "red" }}>{errors.email}</div>
+                    )}
                     <input
                       type="password"
                       placeholder="Password"
@@ -433,6 +474,7 @@ export default function SignLogin() {
                         setFormData({ ...formData, password: e.target.value })
                       }
                     />
+                    {displayError(errors.password)}
                     <input
                       type="password"
                       placeholder="Confirm Password"
@@ -444,7 +486,7 @@ export default function SignLogin() {
                         })
                       }
                     />
-                    {errors.password && (
+                    {errors.confirmPassword && (
                       <p
                         style={{
                           color: "red",
@@ -452,9 +494,10 @@ export default function SignLogin() {
                           fontSize: 12,
                         }}
                       >
-                        {errors.password}
+                        {errors.confirmPassword}
                       </p>
                     )}
+
                     <button type="submit">Sign Up</button>
                   </form>
                 ) : null}
@@ -469,6 +512,9 @@ export default function SignLogin() {
                         setFormData({ ...formData, name: e.target.value })
                       }
                     />
+                    {errors.name && (
+                      <div style={{ color: "red" }}>{errors.name}</div>
+                    )}{" "}
                     <input
                       type="email"
                       placeholder="Email"
@@ -477,6 +523,7 @@ export default function SignLogin() {
                         setFormData({ ...formData, email: e.target.value })
                       }
                     />
+                    {displayError(errors.email)}
                     <input
                       type="password"
                       placeholder="Password"
@@ -485,6 +532,7 @@ export default function SignLogin() {
                         setFormData({ ...formData, password: e.target.value })
                       }
                     />
+                    {displayError(errors.password)}
                     <input
                       type="number"
                       placeholder="Price"
@@ -493,6 +541,7 @@ export default function SignLogin() {
                         setFormData({ ...formData, price: e.target.value })
                       }
                     />
+                    {displayError(errors.price)}
                     <input
                       type="text"
                       placeholder="Location"
@@ -501,17 +550,21 @@ export default function SignLogin() {
                         setFormData({ ...formData, location: e.target.value })
                       }
                     />
-
-                    {errors.password && (
-                      <p
-                        style={{
-                          color: "red",
-                          fontWeight: "bold",
-                          fontSize: 12,
-                        }}
-                      >
-                        {errors.password}
-                      </p>
+                    {displayError(errors.location)}
+                    <input
+                      type="file"
+                      name="imageCover"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      style={{
+                        display: "block",
+                        width: "200px",
+                        padding: "10px",
+                        margin: "10px 0",
+                      }}
+                    />
+                    {errors.imageCover && (
+                      <div style={{ color: "red" }}>{errors.imageCover}</div>
                     )}
                     <button type="submit">Sign Up</button>
                   </form>

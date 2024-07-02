@@ -3,7 +3,14 @@ const bookingController = require('./../controllers/bookingController');
 const authController = require('./../controllers/authController');
 
 const router = express.Router();
+router.get('/tour/:tourId', bookingController.getBookingsByTour);
+router.patch('/:bookingId/accept', bookingController.acceptBooking);
+router.patch('/:bookingId/decline', bookingController.declineBooking);
+router.patch('/:bookingId/finish', bookingController.finishedBooking);
 
+router
+  .route('/:bookingId')
+  .patch(authController.protect, bookingController.updateBooking);
 router.use(authController.protect);
 
 router
@@ -13,10 +20,8 @@ router
 
 router
   .route('/:bookingId')
-  .patch(bookingController.updateBooking)
   .delete(bookingController.deleteBooking);
 
 router.get('/user/:userId', bookingController.getBookingsByUser);
-router.get('/tour/:tourId', bookingController.getBookingsByTour);
 
 module.exports = router;

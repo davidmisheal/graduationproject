@@ -1,14 +1,18 @@
 import React, { useEffect, useState, useCallback } from "react";
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import { useUser } from "../context/UserContext"; // Import useUser hook
+import { useUser } from "../context/UserContext";
 import ChangePassword from "../components/ChangePassword";
-import axios from "axios"; // Import axios for making HTTP requests
-import { Link } from "react-router-dom"; // Import Link for navigation
+import axios from "axios";
+import { Link } from "react-router-dom";
+import { FaCamera } from "react-icons/fa";
 
 export default function Profile() {
   const [edit, setEdit] = useState(false);
-  const { user } = useUser(); // Use the user data
+  const { user } = useUser();
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const isLoggedIn = window.localStorage.getItem("isLoggedIn");
   const [userData, setUserData] = useState(() => {
     const storedUserData = window.localStorage.getItem("userData");
@@ -18,20 +22,25 @@ export default function Profile() {
   const [favorites, setFavorites] = useState([]);
 
   const fetchFavorites = useCallback(async (token) => {
-    try {
-      const response = await axios.get(
-        "http://localhost:3000/api/v1/users/favorites",
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(response.data.data);
-      return response.data.data.favorites;
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-      return [];
+    if (userData.data.user) {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/users/favorites",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(response.data.data);
+        return response.data.data.favorites;
+      } catch (error) {
+        console.error("Error fetching favorites:", error);
+        return [];
+      }
+    }
+    else {
+      return
     }
   }, []);
 
@@ -54,7 +63,6 @@ export default function Profile() {
     try {
       if (userData && userData.token) {
         const token = userData.token;
-        console.log("User token:", token);
         const response = await axios.delete(
           "http://localhost:3000/api/v1/users/favorites",
           {
@@ -75,6 +83,99 @@ export default function Profile() {
     }
   };
 
+  const handleFileChange = async (event) => {
+    const file = event.target.files[0];
+    const formData = new FormData();
+    formData.append("photo", file);
+
+    const userData = JSON.parse(window.localStorage.getItem('userData'));
+
+    let apiUrl = "http://localhost:3000/api/v1/users/updateMe";
+    let updatedData = {};
+
+    if (userData.data.user) {
+      apiUrl = "http://localhost:3000/api/v1/users/updateMe";
+      updatedData = {
+        ...userData,
+        data: {
+          ...userData.data,
+          user: {
+            ...userData.data.user,
+            photo: null // this will be updated later
+          }
+        }
+      };
+    } else if (userData.data.tour) {
+      apiUrl = `http://localhost:3000/api/v1/tours/${userData.data.tour._id}`;
+      updatedData = {
+        ...userData,
+        data: {
+          ...userData.data,
+          tour: {
+            ...userData.data.tour,
+            imageCover: null // this will be updated later
+          }
+        }
+      };
+    }
+
+    try {
+      const response = await axios.patch(
+        apiUrl,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${userData.token}`,
+          },
+        }
+      );
+      console.log("Photo upload response:", response);
+      alert("Profile photo updated successfully!");
+
+      if (userData.data.user) {
+        updatedData.data.user.photo = response.data.data.user.photo;
+      } else if (userData.data.tour) {
+        updatedData.data.tour.imageCover = response.data.data.tour.imageCover;
+      }
+
+      setUserData(updatedData);
+
+      window.localStorage.setItem("userData", JSON.stringify(updatedData));
+    } catch (error) {
+      console.error("Error uploading photo:", error);
+      alert("Failed to update profile photo");
+    }
+  };
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const token = window.localStorage.getItem('token'); // Retrieve the token from localStorage
+
+      try {
+        const response = await axios.get('http://localhost:3000/api/v1/reviews', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        const reviewArray = response.data.data.data;
+        console.log(response);
+        console.log(reviewArray);
+
+        const filteredReviews = reviewArray.filter(review => review.tour === userData.data.tour._id);
+        console.log(filteredReviews)
+        setReviews(filteredReviews);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, [userData]);
+
+
   if (!userData) {
     return (
       <>
@@ -88,78 +189,137 @@ export default function Profile() {
       </>
     );
   }
+
   return (
     <>
       <Nav />
-      <div className="profile-main">
-        <div className="profile-part">
-          <h2 className="profile-title">My Profile</h2>
-          <div className="profile-picture">
-            {userData.data.user && userData.data.user.photo ? (
-              <img
-                src={`http://localhost:3000/img/users/${userData.data.user.photo}`}
-                alt="Profile"
-                onError={(e) => {
-                  e.target.onerror = null;
-                  e.target.src = "http://localhost:3000/img/users/default.jpg";
-                }}
-              />  
-            ) : (
-              <i className="fa-solid fa-user fa-2xl"></i>
-            )}
-          </div>
-          <span className="profile-email">
-            <h2>E-Mail</h2>
-            <p className="pass-email">{isLoggedIn ? email : "Loading..."}</p>
-          </span>
-          <span className="profile-pass">
-            <span>
+      {userData.data.user ?
+        <div className="profile-main">
+          <div className="profile-part">
+            <h2 className="profile-title">My Profile</h2>
+            <div className="profile-picture">
+              {userData.data.user && userData.data.user.photo ? (
+                <img
+                  src={`http://localhost:3000/img/users/${userData.data.user.photo}`}
+                  alt="Profile"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = "http://localhost:3000/img/users/default.jpg";
+                  }}
+                />
+              ) : (
+                <i className="fa-solid fa-user fa-2xl"></i>
+              )}
+              <label htmlFor="photo-upload" className="photo-upload-label">
+                <FaCamera />
+                <input
+                  id="photo-upload"
+                  type="file"
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
+                />
+              </label>
+            </div>
+            <span className="profile-email">
+              <h2>E-Mail</h2>
+              <p className="pass-email">{isLoggedIn ? email : "Loading..."}</p>
+            </span>
+            <span className="profile-pass">
               <h2>Password</h2>
               <p className="pass-p">..............</p>
+              <p className="changepass" onClick={() => setEdit(!edit)}>
+                Change Password?
+              </p>
+              {edit && <ChangePassword email={email} />}
             </span>
-            <p className="changepass" onClick={() => setEdit(!edit)}>
-              Change Password?
-            </p>
-            {edit && <ChangePassword email={email} />}
-          </span>
+          </div>
+          <div className="favorites-section">
+            <h2>Favorites</h2>
+            {favorites && favorites.length > 0 ? (
+              <ul className="favorites-list">
+                {favorites.map((place) => (
+                  <li key={place._id} className="favorite-item">
+                    <div>
+                      {place.img ? (
+                        <img
+                          src={require(`../imgs/${place.img}`)}
+                          alt={place.name}
+                        />
+                      ) : (
+                        <div className="no-image-placeholder">
+                          No Image Available
+                        </div>
+                      )}
+                      <span>
+                        <h4>{place.name}</h4>
+                        <p>{place.location}</p>
+                      </span>
+                    </div>
+                    <button
+                      className="favourite-remove"
+                      onClick={() => handleRemoveFavorite(place._id)}
+                    >
+                      Remove
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No favorite places yet.</p>
+            )}
+          </div>
+        </div> :
+        <div className="profile-main">
+          <div className="profile-part">
+            <h2 className="profile-title">My Profile</h2>
+            <span className="profile-email">
+              <h2>E-Mail</h2>
+              <p className="pass-email">{isLoggedIn ? userData.data.tour.email : "Loading..."}</p>
+            </span>
+            <span className="profile-email">
+              <h2>Name</h2>
+              <p className="pass-email">{isLoggedIn ? userData.data.tour.name : "Loading..."}</p>
+            </span>
+            <span className="profile-email">
+              <h2>Price</h2>
+              <p className="pass-email">{isLoggedIn ? userData.data.tour.price : "Loading..."}</p>
+            </span>
+            <span className="profile-email">
+              <h2>Location</h2>
+              <p className="pass-email">{isLoggedIn ? userData.data.tour.location : "Loading..."}</p>
+            </span>
+            <span className="profile-pass">
+              <h2>Password</h2>
+              <p className="pass-p">..............</p>
+              <p className="changepass" onClick={() => setEdit(!edit)}>
+                Change Password?
+              </p>
+              {edit && <ChangePassword email={email} />}
+            </span>
+          </div>
+          <div className="favorites-section">
+            <h2>My reviews</h2>
+            <h3><i class="fa-solid fa-star fa-xs"></i> {userData.data.tour.ratingsAverage} ({userData.data.tour.ratingsQuantity})</h3>
+            {reviews && reviews.length > 0 ? (
+              <ul className="favorites-list">
+                {reviews.map((review) => (
+                  <li key={review._id} className="favorite-item">
+                    <div>
+                      <span>
+                        <h4>{review.user.name}</h4>
+                        <p>{review.review}</p>
+                        <p>{review.rating}/5</p>
+                      </span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>No Reviews yet.</p>
+            )}
+          </div>
         </div>
-
-        <div className="favorites-section">
-          <h2>Favorites</h2>
-          {favorites.length > 0 ? (
-            <ul className="favorites-list">
-              {favorites.map((place) => (
-                <li key={place._id} className="favorite-item">
-                  <div>
-                    {place.img ? (
-                      <img
-                        src={require(`../imgs/${place.img}`)}
-                        alt={place.name}
-                      />
-                    ) : (
-                      <div className="no-image-placeholder">
-                        No Image Available
-                      </div>
-                    )}
-                    <span>
-                      <h4>{place.name}</h4>
-                      <p>{place.location}</p>
-                    </span>
-                  </div>
-                  <button
-                    className="favourite-remove"
-                    onClick={() => handleRemoveFavorite(place._id)}
-                  >
-                    Remove
-                  </button>
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <p>No favorite places yet.</p>
-          )}
-        </div>
-      </div>
+      }
       <Footer name="footer-main" />
     </>
   );
