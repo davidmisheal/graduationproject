@@ -1,4 +1,3 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Tour = require('../models/tourModel');
 const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
@@ -6,31 +5,34 @@ const catchAsync = require('../utils/catchAsync');
 const factory = require('./handlerFactory');
 
 exports.createBooking = catchAsync(async (req, res, next) => {
-  const { tour, places, date, price } = req.body;
-
   if (!req.user) {
     return next(new AppError('Not authorized to access this resource', 401));
   }
 
-  // Check if there's already a booking for the same tour on the same date
-  const existingBooking = await Booking.findOne({ tour: tour, date: date });
+  const { tour, places, date, price } = req.body;
+  const bookingDate = new Date(date);
+  bookingDate.setUTCHours(0, 0, 0, 0);
+
+  console.log('Booking Date (UTC Midnight):', bookingDate.toISOString());
+
+  // Check for an existing booking on the same tour and date
+  const existingBooking = await Booking.findOne({
+    tour: tour,
+    date: bookingDate
+  });
 
   if (existingBooking) {
+    console.log(
+      'Existing booking found for tour on this date:',
+      existingBooking
+    );
     return res.status(403).json({
       status: 'fail',
-      message: 'Sorry, the tour is already booked on this date'
+      message: 'This tour is already booked on this date.'
     });
   }
-  // Ensure 'places' is an array and not undefined or a single value
-  if (!Array.isArray(places)) {
-    return next(new AppError('Places must be an array', 400));
-  }
 
-  // Convert date to the start of the day to avoid time conflicts
-  const bookingDate = new Date(date);
-  bookingDate.setHours(0, 0, 0, 0);
-
-  // Check if there's already a booking for the same place by this user on the same date
+  // Check for place booking conflicts
   const placeBookingConflict = await Booking.findOne({
     user: req.user._id,
     places: { $in: places },
@@ -38,6 +40,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
   });
 
   if (placeBookingConflict) {
+    console.log('Place booking conflict found:', placeBookingConflict);
     return res.status(403).json({
       status: 'fail',
       message:
@@ -53,6 +56,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     price
   });
 
+  console.log('New booking created:', newBooking);
   res.status(201).json({
     status: 'success',
     data: {
@@ -60,6 +64,7 @@ exports.createBooking = catchAsync(async (req, res, next) => {
     }
   });
 });
+
 exports.getBooking = factory.getOne(Booking);
 exports.getAllBookings = factory.getAll(Booking);
 
